@@ -56,10 +56,10 @@
       test: (p, now) => p.name === "Larnaca Salt Lake" && [10, 11, 0, 1, 2].includes(now.getMonth()) },
     { id: "firstlight", name: "First Light", points: 1111, how: "Check in at Petra tou Romiou around sunrise",
       test: (p, now) => p.name === "Petra tou Romiou" && Math.abs(now - sunrise(now, p.lat, p.lon)) <= 45 * 60e3 },
-    { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across History, Wine and Nature in one day",
-      test: (p, now) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size === 3 }
+    { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across any three filters in one day",
+      test: (p, now) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size >= 3 }
   ];
-  const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 40, name: "Keeper of the Island" }];
+  const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 56, name: "Keeper of the Island" }];
   const laurels = () => Object.values(state.quiz).filter(q => q.laurel).length;
   const earned = () => TROPHIES.filter(t => t.test());
 
@@ -176,9 +176,9 @@
   }
   function stamps() {
     const out = [];
-    for (const [m, label] of [["history", "Periods"], ["wine", "Wine areas"], ["nature", "Landscapes"]]) {
-      const names = m === "history" ? Object.fromEntries(ERA_KEYS.map(k => [k, ERAS[k].n])) : m === "nature" ? KIND_LABEL : null;
-      const key = x => m === "history" ? x.era : m === "nature" ? x.kind : x.tag;
+    for (const [m, label] of [["history", "Periods"], ["wine", "Wine areas"], ["nature", "Landscapes"], ["villages", "Village life"], ["table", "Local foods"]]) {
+      const names = m === "history" ? Object.fromEntries(ERA_KEYS.map(k => [k, ERAS[k].n])) : m === "nature" ? KIND_LABEL : m === "villages" ? Object.fromEntries(FILTERS.keys.village) : null;
+      const key = x => m === "history" ? x.era : (m === "nature" || m === "villages") ? x.kind : x.tag;
       const allKeys = [...new Set(PLACES[m].filter(scorable).map(key))];
       const got = new Set(PLACES[m].filter(x => been(x.name)).map(key));
       out.push(`<h3>${label}</h3><p class="g-stamps">${allKeys.map(k => `<span class="${got.has(k) ? "on" : ""}">${esc(names ? names[k] : k)}</span>`).join("")}</p>`);
