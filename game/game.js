@@ -16,7 +16,8 @@
   const ALL = Object.entries(PLACES).flatMap(([m, list]) => list.map(p => ({ p, m })));
   const find = name => ALL.find(x => x.p.name === name);
   const rules = p => SCORING[p.name];
-  const scorable = p => !!rules(p) && !NORTH.has(p.name);
+  const T = window.KyprosTrophies;   // trophy rules, shared with the Passport page (game/scoring.js)
+  const scorable = p => T.scorable({ name: p.name, north: NORTH.has(p.name), egg: p.egg });
   const SCORABLE = ALL.filter(x => scorable(x.p));
   const value = p => { const r = rules(p); return (r.r + r.e + r.i) * 100 + r.s; };
   const repeatValue = p => Math.ceil(value(p) * REPEAT_SHARE);
@@ -35,46 +36,15 @@
   const island = () => Math.round(visitedCount() / SCORABLE.length * 1000) / 10;
   const num = n => n.toLocaleString("en-GB");
 
-  /* ---------- Trophies ---------- */
-  const STORY = ["Petra tou Romiou", "Sanctuary of Aphrodite", "Amathus", "Kition", "Aphrodite & Adonis Trails"];
+  /* ---------- Trophies: the rules live in game/scoring.js ---------- */
   const been = n => !!state.visits[n];
-  const countMode = m => PLACES[m].filter(p => been(p.name)).length;
-  const TROPHIES = [
-    { id: "aphrodite", name: "Aphrodite Adventures", how: "Finish all five chapters", test: () => STORY.every(been) },
-    { id: "huts", name: "First Farmers", how: "Visit Choirokoitia", test: () => been("Choirokoitia") },
-    { id: "ingot", name: "The Copper Island", how: "Visit Kition", test: () => been("Kition") },
-    { id: "walls", name: "Venetian Nicosia", how: "Visit the Venetian Walls", test: () => been("Venetian Walls of Nicosia") },
-    { id: "commandaria", name: "Commandaria", how: "Visit the Commandaria villages", test: () => been("Commandaria villages") },
-    { id: "xynisteri", name: "Native Grape", how: "Visit 3 wine places", test: () => countMode("wine") >= 3 },
-    { id: "amphora", name: "Five Millennia", how: "Visit 5 wine places", test: () => countMode("wine") >= 5 },
-    { id: "leafb", name: "Krasochoria", how: "Visit Omodos", test: () => been("Omodos") },
-    { id: "avakas", name: "Avakas Gorge", how: "Walk Avakas Gorge", test: () => been("Avakas Gorge") },
-    { id: "cedar", name: "Cedar Valley", how: "Visit Cedar Valley", test: () => been("Cedar Valley") }
-  ];
-  const WILD = [
-    { id: "flamingo", name: "Flamingo Season", points: 777, how: "Check in at Larnaca Salt Lake between November and March",
-      test: (p, now) => p.name === "Larnaca Salt Lake" && [10, 11, 0, 1, 2].includes(now.getMonth()) },
-    { id: "firstlight", name: "First Light", points: 1111, how: "Check in at Petra tou Romiou around sunrise",
-      test: (p, now) => p.name === "Petra tou Romiou" && Math.abs(now - sunrise(now, p.lat, p.lon)) <= 45 * 60e3 },
-    { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across any three filters in one day",
-      test: (p, now) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size >= 3 }
-  ];
-  const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 56, name: "Keeper of the Island" }];
-  const laurels = () => Object.values(state.quiz).filter(q => q.laurel).length;
-  const earned = () => TROPHIES.filter(t => t.test());
-
-  // Sunrise for a date and place, using the standard almanac formula.
-  function sunrise(d, lat, lon) {
-    const rad = Math.PI / 180, wrap = (v, m) => ((v % m) + m) % m;
-    const start = Date.UTC(d.getUTCFullYear(), 0, 0), day = Math.floor((d - start) / 864e5), lh = lon / 15, t = day + (6 - lh) / 24;
-    const M = .9856 * t - 3.289, L = wrap(M + 1.916 * Math.sin(M * rad) + .02 * Math.sin(2 * M * rad) + 282.634, 360);
-    let RA = wrap(Math.atan(.91764 * Math.tan(L * rad)) / rad, 360);
-    RA = (RA + Math.floor(L / 90) * 90 - Math.floor(RA / 90) * 90) / 15;
-    const sinD = .39782 * Math.sin(L * rad), cosD = Math.cos(Math.asin(sinD));
-    const cosH = (Math.cos(90.833 * rad) - sinD * Math.sin(lat * rad)) / (cosD * Math.cos(lat * rad));
-    const H = (360 - Math.acos(cosH) / rad) / 15, UT = wrap(H + RA - .06571 * t - 6.622 - lh, 24);
-    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) + UT * 36e5;
-  }
+  const { WILD } = T;
+  // Each place as the trophy rules see it, with the label it adds to its map's stamp row
+  const stampOf = (p, m) => m === "history" ? ERAS[p.era].n : m === "nature" ? KIND_LABEL[p.kind]
+    : m === "villages" ? Object.fromEntries(FILTERS.keys.village)[p.kind] : p.tag;
+  const ROOM_PLACES = ALL.map(({ p, m }) => ({ name: p.name, mode: m, north: NORTH.has(p.name), egg: !!p.egg, stamp: stampOf(p, m) }));
+  const laurels = () => T.laurels(state);
+  const earned = () => T.earned(state, ROOM_PLACES);
 
   /* ---------- Check-ins ---------- */
   function metres(a, b) {
@@ -116,7 +86,7 @@
     const v = state.visits[p.name] ||= { first: now.toISOString(), points: 0, months: [] };
     v.points += points; v.months.push(monthKey(now));
     state.log.unshift({ t: now.toISOString(), name: p.name, mode: m, points });
-    const wild = WILD.filter(w => !state.wild[w.id] && w.test(p, now));
+    const wild = WILD.filter(w => !state.wild[w.id] && w.test(p, now, state));
     wild.forEach(w => { state.wild[w.id] = { at: now.toISOString(), points: w.points }; });
     const unlocked = earned().filter(t => !before.has(t.id));
     save(); refresh();
@@ -168,38 +138,27 @@
       requestAnimationFrame(tick);
     }
   }
-  const badgeFile = id => TROPHIES.some(t => t.id === id) || id === "flamingo" || id === "firstlight";
+  const badgeFile = T.hasBadge;
 
   function tile(id, name, how, on, pts) {
     const art = badgeFile(id) ? `<img src="${BADGES}${id}.webp" alt="">` : `<span class="g-num">${num(pts)}</span>`;
     return `<li class="${on ? "" : "locked"}">${art}<b>${esc(name)}</b><span>${on ? (pts ? `+${num(pts)}` : "Collected") : esc(how)}</span></li>`;
   }
-  function stamps() {
-    const out = [];
-    for (const [m, label] of [["history", "Periods"], ["wine", "Wine areas"], ["nature", "Landscapes"], ["villages", "Village life"], ["table", "Local foods"]]) {
-      const names = m === "history" ? Object.fromEntries(ERA_KEYS.map(k => [k, ERAS[k].n])) : m === "nature" ? KIND_LABEL : m === "villages" ? Object.fromEntries(FILTERS.keys.village) : null;
-      const key = x => m === "history" ? x.era : (m === "nature" || m === "villages") ? x.kind : x.tag;
-      const allKeys = [...new Set(PLACES[m].filter(scorable).map(key))];
-      const got = new Set(PLACES[m].filter(x => been(x.name)).map(key));
-      out.push(`<h3>${label}</h3><p class="g-stamps">${allKeys.map(k => `<span class="${got.has(k) ? "on" : ""}">${esc(names ? names[k] : k)}</span>`).join("")}</p>`);
-    }
-    return out.join("");
-  }
   function openTrophies() {
-    const done = STORY.filter(been).length;
+    const R = T.room(state, ROOM_PLACES), done = R.story.filter(x => x.on).length;
     dialog("g-room", `${closeBtn}
-      <p class="g-eye">${earned().length + Object.keys(state.wild).length} of ${TROPHIES.length + WILD.length} collected</p>
+      <p class="g-eye">${R.collected} of ${R.possible} collected</p>
       <h2>Trophy Room</h2>
-      <p class="g-sum">${num(total())} points · ${island()}% of the island · ${visitedCount()} of ${SCORABLE.length} places</p>
-      <h3>Aphrodite Adventures · ${done} of ${STORY.length}</h3>
-      <ol class="g-story">${STORY.map(n => `<li class="${been(n) ? "on" : ""}">${esc(n)}</li>`).join("")}</ol>
+      <p class="g-sum">${num(R.points)} points · ${R.island}% of the island · ${R.visited} of ${R.of} places</p>
+      <h3>Aphrodite Adventures · ${done} of ${R.story.length}</h3>
+      <ol class="g-story">${R.story.map(x => `<li class="${x.on ? "on" : ""}">${esc(x.name)}</li>`).join("")}</ol>
       <h3>Trophies</h3>
-      <ul class="g-shelf">${TROPHIES.map(t => tile(t.id, t.name, t.how, t.test())).join("")}</ul>
+      <ul class="g-shelf">${R.trophies.map(t => tile(t.id, t.name, t.how, t.on)).join("")}</ul>
       <h3>Wild Cards</h3>
-      <ul class="g-shelf">${WILD.map(w => tile(w.id, w.name, w.how, state.wild[w.id], w.points)).join("")}</ul>
-      <h3>Laurels · ${laurels()} of ${SCORABLE.length}</h3>
-      <ul class="g-shelf">${LAURELS.map(l => `<li class="${laurels() >= l.n ? "" : "locked"}"><span class="g-num">${l.n}</span><b>${l.name}</b><span>${laurels() >= l.n ? "Collected" : `Earn ${l.n} Laurels`}</span></li>`).join("")}</ul>
-      ${stamps()}
+      <ul class="g-shelf">${R.wild.map(w => tile(w.id, w.name, w.how, w.on, w.points)).join("")}</ul>
+      <h3>Laurels · ${R.laurels.count} of ${R.laurels.of}</h3>
+      <ul class="g-shelf">${R.laurels.tiers.map(l => `<li class="${l.on ? "" : "locked"}"><span class="g-num">${l.n}</span><b>${l.name}</b><span>${l.on ? "Collected" : `Earn ${l.n} Laurels`}</span></li>`).join("")}</ul>
+      ${R.stamps.map(g => `<h3>${g.label}</h3><p class="g-stamps">${g.items.map(x => `<span class="${x.on ? "on" : ""}">${esc(x.name)}</span>`).join("")}</p>`).join("")}
       <div class="g-end"><a href="${preview ? location.pathname : "?preview"}">${preview ? "Leave preview mode" : "Try preview mode"}</a></div>`);
   }
 
