@@ -1,5 +1,5 @@
 /* KYPROS GAME · uses the atlas's theme variables, so it restyles itself with each mode. */
-.g-bar { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 10px; align-items: center; font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
+.g-bar { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 6px 10px; align-items: center; font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
 .g-bar p { margin: 0; white-space: nowrap; }
 .g-bar b { font-family: var(--f-display); font-size: 20px; color: var(--acc); font-variant-numeric: tabular-nums; }
 .g-bar button { min-height: 36px; padding: 0 10px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--track); cursor: pointer; font-family: var(--f-ui); font-size: 13px; font-weight: 600; }
@@ -68,3 +68,16 @@ body[data-mode="nature"] .g-dialog h2 { font-weight: 700; text-transform: upperc
 .g-board .me { background: var(--track); }
 .g-banner { position: fixed; z-index: 30; left: 50%; bottom: 14px; transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); box-sizing: border-box; margin: 0; padding: 7px 14px; border-radius: 99px; background: var(--ink); color: var(--pbg); font-family: var(--f-ui); font-size: 13px; }
 @media (max-width: 860px) { .g-banner { top: 8px; bottom: auto; } }
+
+.g-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.g-row button { min-height: 44px; padding: 0 14px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--pbg); cursor: pointer; font-family: var(--f-ui); font-size: 14px; font-weight: 600; }
+.g-row .g-wish[aria-pressed="true"] { border-color: var(--acc); color: var(--acc); }
+.g-laurel { font-family: var(--f-ui); font-size: 14px; font-weight: 600; color: var(--acc); }
+.g-opts button.right { opacity: 1; border-color: var(--acc); color: var(--acc); font-weight: 600; }
+.g-opts button.wrong { opacity: 1; text-decoration: line-through; }
+.g-next { margin-top: 12px; }
+.g-next[hidden] { display: none; }
+.g-quizzes { list-style: none; margin: 0; padding: 0; font-family: var(--f-ui); font-size: 14px; }
+.g-quizzes li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+.g-quizzes button { min-height: 44px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--track); cursor: pointer; white-space: nowrap; font-weight: 600; }
+.g-quizzes button:disabled { cursor: default; opacity: .6; }

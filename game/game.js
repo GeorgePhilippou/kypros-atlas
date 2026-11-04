@@ -10,7 +10,7 @@
   const preview = new URLSearchParams(location.search).has("preview");
   const STORE = preview ? "kypros.game.preview.v1" : "kypros.game.v1";
   const BADGES = "game/badges/";
-  const fresh = () => ({ name: "", visits: {}, wild: {}, log: [] });
+  const fresh = () => ({ name: "", visits: {}, wild: {}, log: [], wish: {}, quiz: {} });
 
   /* ---------- Places ---------- */
   const ALL = Object.entries(PLACES).flatMap(([m, list]) => list.map(p => ({ p, m })));
@@ -59,6 +59,8 @@
     { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across History, Wine and Nature in one day",
       test: (p, now) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size === 3 }
   ];
+  const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 40, name: "Keeper of the Island" }];
+  const laurels = () => Object.values(state.quiz).filter(q => q.laurel).length;
   const earned = () => TROPHIES.filter(t => t.test());
 
   // Sunrise for a date and place, using the standard almanac formula.
@@ -195,8 +197,70 @@
       <ul class="g-shelf">${TROPHIES.map(t => tile(t.id, t.name, t.how, t.test())).join("")}</ul>
       <h3>Wild Cards</h3>
       <ul class="g-shelf">${WILD.map(w => tile(w.id, w.name, w.how, state.wild[w.id], w.points)).join("")}</ul>
+      <h3>Laurels · ${laurels()} of ${SCORABLE.length}</h3>
+      <ul class="g-shelf">${LAURELS.map(l => `<li class="${laurels() >= l.n ? "" : "locked"}"><span class="g-num">${l.n}</span><b>${l.name}</b><span>${laurels() >= l.n ? "Collected" : `Earn ${l.n} Laurels`}</span></li>`).join("")}</ul>
       ${stamps()}
       <div class="g-end"><a href="${preview ? location.pathname : "?preview"}">${preview ? "Leave preview mode" : "Try preview mode"}</a></div>`);
+  }
+
+  /* ---------- Quizzes: 5 out of 5 earns a Laurel, kept apart from leaderboard points ---------- */
+  const QUIZ_SIZE = 5, today = () => new Date().toDateString();
+  const shuffle = list => { const a = [...list]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const canQuiz = p => scorable(p) && !!QUIZ[p.name];
+  const triedToday = p => (state.quiz[p.name] || {}).day === today();
+  function districtQuestion(p) {
+    const others = shuffle([...new Set(ALL.map(x => x.p.district))].filter(d => d !== p.district)).slice(0, 2);
+    return [`Which district is ${p.name} in?`, p.district, ...others];
+  }
+  function buildQuiz(p) {
+    const r = rules(p);
+    return shuffle([[r.q, ...r.a], districtQuestion(p), ...QUIZ[p.name]]).slice(0, QUIZ_SIZE)
+      .map(([q, right, ...wrong]) => ({ q, right, options: shuffle([right, ...wrong]) }));
+  }
+  function startQuiz(p) {
+    if (!canQuiz(p) || triedToday(p)) return;
+    state.quiz[p.name] = { ...state.quiz[p.name], day: today() }; save(); refresh();
+    const qs = buildQuiz(p); let i = 0, score = 0;
+    const show = () => {
+      const c = qs[i];
+      const d = dialog("g-quiz", `${closeBtn}
+        <p class="g-eye">Question ${i + 1} of ${QUIZ_SIZE}</p><h2>${esc(p.name)}</h2>
+        <p class="g-q">${esc(c.q)}</p>
+        <div class="g-opts">${c.options.map(o => `<button>${esc(o)}</button>`).join("")}</div>
+        <p class="g-msg" role="status"></p><button class="g-main g-next" hidden>${i + 1 < QUIZ_SIZE ? "Next question" : "See result"}</button>`);
+      const buttons = [...d.querySelectorAll(".g-opts button")], next = d.querySelector(".g-next");
+      buttons.forEach((b, k) => b.onclick = () => {
+        const hit = c.options[k] === c.right; if (hit) score++;
+        buttons.forEach((x, n) => { x.disabled = true; x.classList.toggle("right", c.options[n] === c.right); x.classList.toggle("wrong", n === k && !hit); });
+        d.querySelector(".g-msg").textContent = hit ? "Correct." : `The answer is ${c.right}.`;
+        next.hidden = false; next.focus();
+      });
+      next.onclick = () => { if (++i < QUIZ_SIZE) show(); else finish(); };
+    };
+    const finish = () => {
+      const perfect = score === QUIZ_SIZE, first = perfect && !state.quiz[p.name].laurel;
+      if (first) { state.quiz[p.name].laurel = true; save(); refresh(); }
+      dialog("g-quiz", `<p class="g-eye">${perfect ? (first ? "Laurel earned" : "Perfect again") : "Quiz complete"}</p>
+        <h2>${esc(p.name)}</h2><p class="g-big">${score} / ${QUIZ_SIZE}</p>
+        <p class="g-sum">${perfect ? `${laurels()} of ${SCORABLE.length} Laurels collected` : "Get all five right to earn its Laurel. You can try this place again tomorrow."}</p>
+        <button class="g-main" data-close>Done</button>`);
+    };
+    show();
+  }
+  function quizRow(p) {
+    const q = state.quiz[p.name] || {}, label = q.laurel ? "Laurel earned" : triedToday(p) ? "Try again tomorrow" : "Take quiz";
+    return `<li><span>${esc(p.name)}</span><button data-quiz="${esc(p.name)}" ${q.laurel || triedToday(p) ? "disabled" : ""}>${label}</button></li>`;
+  }
+  function openQuizzes() {
+    const been_ = SCORABLE.filter(x => been(x.p.name)).map(x => x.p), want = SCORABLE.filter(x => state.wish[x.p.name] && !been(x.p.name)).map(x => x.p);
+    const d = dialog("g-room", `${closeBtn}
+      <p class="g-eye">${laurels()} of ${SCORABLE.length} Laurels</p><h2>Quizzes</h2>
+      <p class="g-sum">Get five out of five to earn a place's Laurel. Each place gets one attempt a day.</p>
+      <h3>Places you've been</h3>
+      ${been_.length ? `<ul class="g-quizzes">${been_.map(quizRow).join("")}</ul>` : "<p class=\"g-sum\">Check in somewhere to unlock its memory quiz.</p>"}
+      <h3>Places you want to go</h3>
+      ${want.length ? `<ul class="g-quizzes">${want.map(quizRow).join("")}</ul>` : "<p class=\"g-sum\">Open a place and tap Want to go to add its prep quiz.</p>"}`);
+    d.querySelectorAll("[data-quiz]").forEach(b => b.onclick = () => { d.close(); startQuiz(find(b.dataset.quiz).p); });
   }
 
   /* ---------- Friends ---------- */
@@ -209,6 +273,8 @@
       if (!mine || v.points > mine.points) state.visits[n] = v;
     }
     Object.assign(state.wild, { ...remote.wild, ...state.wild });
+    state.wish = { ...remote.wish, ...state.wish };
+    for (const [n, q] of Object.entries(remote.quiz || {})) state.quiz[n] = { ...q, ...state.quiz[n], laurel: !!(q.laurel || (state.quiz[n] || {}).laurel) };
     const seen = new Set(); state.log = [...state.log, ...(remote.log || [])].filter(l => !seen.has(l.t + l.name) && seen.add(l.t + l.name)).sort((a, b) => b.t.localeCompare(a.t));
     state.name ||= remote.name || "";
   }
@@ -269,9 +335,17 @@
     const can = s === "new" || s === "repeat";
     const el = document.createElement("section");
     el.className = "g-card"; el.setAttribute("aria-label", "Game");
+    const quizzable = canQuiz(p), q = state.quiz[p.name] || {}, ready = quizzable && (been(p.name) || state.wish[p.name]) && !q.laurel && !triedToday(p);
     el.innerHTML = `<div><b>${head[0]}</b><p>${head[1]}</p></div>
-      ${can ? `<button class="g-main">Check in</button><p class="g-msg" role="status"></p>` : ""}`;
-    if (can) el.querySelector("button").onclick = e => checkIn(p, e.currentTarget, el.querySelector(".g-msg"));
+      ${can ? `<button class="g-main g-check">Check in</button><p class="g-msg" role="status"></p>` : ""}
+      ${quizzable ? `<div class="g-row">
+        ${been(p.name) ? "" : `<button class="g-wish" aria-pressed="${!!state.wish[p.name]}">${state.wish[p.name] ? "On your list" : "Want to go"}</button>`}
+        ${q.laurel ? `<span class="g-laurel">Laurel earned</span>` : ready ? `<button class="g-take">Take quiz</button>` : ""}
+      </div>` : ""}`;
+    if (can) el.querySelector(".g-check").onclick = e => checkIn(p, e.currentTarget, el.querySelector(".g-msg"));
+    const w = el.querySelector(".g-wish"), t = el.querySelector(".g-take");
+    if (w) w.onclick = () => { if (state.wish[p.name]) delete state.wish[p.name]; else state.wish[p.name] = true; save(); refresh(); };
+    if (t) t.onclick = () => startQuiz(p);
     return el;
   }
   const _select = select;
@@ -290,6 +364,7 @@
   function refresh() {
     $("g-pts").textContent = num(total());
     $("g-pct").textContent = island() + "%";
+    $("g-laurels").textContent = laurels();
     mark();
     if (current !== null) {
       const old = $("card").querySelector(".g-card"), p = PLACES[mode][current];
@@ -300,8 +375,9 @@
   /* ---------- Start ---------- */
   const bar = document.createElement("div");
   bar.className = "g-bar";
-  bar.innerHTML = `<p><b id="g-pts">0</b> pts</p><p><b id="g-pct">0%</b> island</p><button id="g-trophies">Trophies</button><button id="g-friends">Friends</button>`;
+  bar.innerHTML = `<p><b id="g-pts">0</b> pts</p><p><b id="g-pct">0%</b> island</p><p><b id="g-laurels">0</b> laurels</p><button id="g-quizzes">Quizzes</button><button id="g-trophies">Trophies</button><button id="g-friends">Friends</button>`;
   document.querySelector(".views").before(bar);
+  $("g-quizzes").onclick = openQuizzes;
   $("g-trophies").onclick = openTrophies;
   $("g-friends").onclick = () => openFriends();
   if (preview) { const b = document.createElement("p"); b.className = "g-banner"; b.textContent = "Preview mode: visits are simulated and never reach the leaderboard."; document.body.append(b); }
