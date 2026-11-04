@@ -1,0 +1,35 @@
+/* Kypros · the shared top bar (site/nav.js fills it in).
+   Desktop: wordmark, a Maps dropdown, Passport, Friends, About.
+   Under 700px: wordmark and a Menu button that opens a full-width sheet. */
+.k-bar { position: sticky; top: 0; z-index: 40; height: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); background: rgb(243 240 234 / .94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); font-family: var(--f-ui); }
+.k-bar-in { display: flex; align-items: center; gap: 24px; height: var(--bar-h); }
+.k-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-height: 44px; }
+.k-brand b { font: 600 23px var(--f-display); }
+.k-brand span { font: 13px var(--f-ui); color: var(--muted); white-space: nowrap; }
+.k-nav { margin-left: auto; }
+.k-links { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.k-links > li { position: relative; }
+.k-link, .k-maps-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: 500 15.5px var(--f-ui); text-decoration: none; cursor: pointer; transition: color .2s, background-color .2s; }
+.k-link:hover, .k-maps-btn:hover, .k-maps-btn[aria-expanded="true"] { color: var(--ink); background: rgb(42 39 35 / .05); }
+.k-link[aria-current="page"] { color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--acc); border-radius: 0; }
+.k-maps-btn svg { width: 14px; height: 14px; transition: transform .2s; }
+.k-maps-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.k-drop { position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; margin: 0; padding: 6px; list-style: none; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; box-shadow: var(--shadow); }
+.k-drop[hidden], .k-sheet[hidden] { display: none; }
+.k-drop a, .k-sheet a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: var(--ink); text-decoration: none; font: 500 15.5px var(--f-ui); }
+.k-drop a:hover, .k-drop a:focus-visible, .k-sheet a:hover { background: var(--track); }
+.k-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--c, var(--acc)); }
+.k-menu-btn { display: none; }
+
+@media (max-width: 699px) {
+  .k-brand span { display: none; }
+  .k-nav { display: none; }
+  .k-menu-btn { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; min-height: 44px; min-width: 44px; padding: 0 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--card); color: var(--ink); font: 600 15px var(--f-ui); cursor: pointer; }
+  .k-menu-btn svg { width: 18px; height: 18px; }
+  .k-sheet { position: fixed; left: 0; right: 0; top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px)); overflow-y: auto; padding: 8px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--paper); border-bottom: 1px solid var(--rule); box-shadow: 0 24px 40px -24px rgb(40 30 20 / .45); }
+  .k-sheet ul { margin: 0; padding: 0; list-style: none; }
+  .k-sheet .k-sheet-h { margin: 12px 12px 4px; font: 600 12px var(--f-ui); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .k-sheet a { font-size: 17px; }
+  .k-sheet a[aria-current="page"] { font-weight: 700; box-shadow: inset 3px 0 0 var(--acc); border-radius: 0 8px 8px 0; }
+  .k-sheet hr { margin: 8px 12px; border: 0; border-top: 1px solid var(--rule); }
+}
