@@ -30,7 +30,10 @@
 
 <main id="main">
   <!-- Your island: progress at a glance -->
-  <section class="hero wrap" aria-labelledby="hero-h">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="wrap hero-in">
     <div class="hero-text">
       <p class="eyebrow" id="hero-eye">Your Cyprus</p>
       <h1 id="hero-h">Nine thousand years, one island</h1>
@@ -54,11 +57,17 @@
       </div>
     </div>
     <figure class="hero-map" aria-label="Map of Cyprus with every place in the atlas">
+      <p class="hero-map-h">Your island</p>
       <svg id="island" viewBox="0 0 800 420" role="img" aria-labelledby="island-cap"></svg>
       <figcaption id="island-cap">
         <span><i class="k k-history"></i>History</span><span><i class="k k-wine"></i>Wine</span><span><i class="k k-nature"></i>Nature</span><span><i class="k k-villages"></i>Villages</span><span><i class="k k-table"></i>Table</span><span><i class="k k-open"></i>Not visited yet</span>
       </figcaption>
     </figure>
+    </div>
+    <div class="wrap hero-foot">
+      <a class="slide-cap" id="slide-cap" href="../#history" hidden><span class="slide-place"></span><span class="slide-go">See it on the map <span aria-hidden="true">→</span></span></a>
+      <div class="slide-dots" id="slide-dots" role="group" aria-label="Background photos"></div>
+    </div>
   </section>
 
   <!-- How it works -->
@@ -175,5 +184,7 @@
 <script src="../game/scoring.js"></script>
 <script src="../game/friends.js"></script>
 <script src="home.js"></script>
+<script src="hero/slides.js"></script>
+<script src="hero.js"></script>
 </body>
 </html>

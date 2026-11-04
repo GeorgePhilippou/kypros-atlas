@@ -1,0 +1,26 @@
+[
+  {
+    "file": "tombs-of-the-kings.jpg",
+    "place": "Tombs of the Kings",
+    "where": "Paphos",
+    "map": "history",
+    "focus": "50% 55%",
+    "credit": ""
+  },
+  {
+    "file": "paphos-odeon.jpg",
+    "place": "The Odeon, Nea Paphos",
+    "where": "Paphos",
+    "map": "history",
+    "focus": "50% 45%",
+    "credit": ""
+  },
+  {
+    "file": "paphos-castle.jpg",
+    "place": "Paphos Castle",
+    "where": "Paphos harbour",
+    "map": "history",
+    "focus": "72% 50%",
+    "credit": ""
+  }
+]
