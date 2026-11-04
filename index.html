@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+  // The site's front door is the start page. Links into the map name a view (#history, #wine, #nature)
+  // or carry a query such as an invite (?join=) or ?preview, and stay on the map.
+  if (!location.hash && !location.search) location.replace("home/");
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="An interactive atlas of Cyprus: history, wine, nature and day-trip planning on a 3D terrain map.">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
@@ -183,6 +188,9 @@ body[data-mode="nature"] .pin .dot svg { width: 14px; height: 14px; }
 body[data-mode="history"] .panel { border: 1px solid var(--rule); }
 .top { padding: 22px 24px 0; display: grid; gap: 18px; }
 .brand { display: flex; align-items: baseline; justify-content: space-between; }
+.brand-home { display: inline-flex; align-items: center; gap: 4px; color: inherit; text-decoration: none; margin-left: -4px; border-radius: 6px; }
+.brand-home svg { width: 16px; height: 16px; opacity: .45; align-self: center; transition: opacity .2s, transform .2s; }
+.brand-home:hover svg { opacity: 1; transform: translateX(-2px); }
 .brand b { font-family: var(--f-display); font-weight: 500; font-size: 22px; letter-spacing: .02em; }
 .brand span { font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
 body[data-mode="history"] .brand b { font-weight: 600; letter-spacing: .01em; font-size: 23px; }
@@ -547,7 +555,7 @@ body[data-mode="history"] main:not(.near) .pin:not(.must):not(.stop) .lbl { opac
 
 <aside class="panel">
   <div class="top">
-    <div class="brand"><b>Kypros</b><span>Κύπρος · Kıbrıs</span></div>
+    <div class="brand"><a class="brand-home" href="home/" title="Back to the start page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Kypros</b></a><span>Κύπρος · Kıbrıs</span></div>
     <div class="tabs" role="tablist" aria-label="Map theme" id="tabs"></div>
     <div class="views" role="tablist" aria-label="View">
       <button role="tab" data-v="places" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Explore the map</button>

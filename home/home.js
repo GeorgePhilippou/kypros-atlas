@@ -38,9 +38,7 @@
     $("#hero-eye").textContent = name ? `Welcome back, ${name}` : "Welcome back";
     $("#hero-h").textContent = island >= 50 ? "You know this island well" : "Your island is filling in";
     $("#hero-lead").textContent = `You've checked in at ${visited} of ${SCORABLE.length} places. Pick up where you left off, or try a view you haven't explored yet.`;
-    const last = S.log[0] && byName[S.log[0].name];
-    $("#hero-go").innerHTML = `Continue exploring <span aria-hidden="true">→</span>`;
-    if (last) $("#hero-go").href = mapUrl(last.mode);
+    $("#begin-l").textContent = "Pick up a view";
   }
   const statEl = k => document.querySelector(`[data-stat="${k}"]`);
   statEl("of").textContent = `of ${SCORABLE.length}`;

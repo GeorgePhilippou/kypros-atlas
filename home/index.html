@@ -32,16 +32,21 @@
     <div class="hero-text">
       <p class="eyebrow" id="hero-eye">Your Cyprus</p>
       <h1 id="hero-h">Nine thousand years, one island</h1>
-      <p class="lead" id="hero-lead">Explore Cyprus through three maps: its history, its wine and its wild places. Check in when you visit, and watch the island fill in.</p>
+      <p class="lead" id="hero-lead">Kypros is a map of Cyprus you can read three ways: nine thousand years of history, the wine villages of the hills, and the island's wild places. Pick a view, open the places on it, and plan days out between them. When you visit, check in and watch the island fill in.</p>
       <dl class="stats" id="stats">
         <div><dt>Island explored</dt><dd><b data-stat="island">0</b><small>%</small></dd></div>
         <div><dt>Places visited</dt><dd><b data-stat="visited">0</b><small data-stat="of">of 0</small></dd></div>
         <div><dt>Points</dt><dd><b data-stat="points">0</b></dd></div>
         <div><dt>Laurels</dt><dd><b data-stat="laurels">0</b></dd></div>
       </dl>
-      <div class="hero-cta">
-        <a class="btn btn-acc" id="hero-go" href="../#history">Start exploring <span aria-hidden="true">→</span></a>
-        <a class="btn btn-line" href="#views">How the maps work</a>
+      <div class="begin" id="begin">
+        <p class="begin-l" id="begin-l">Where would you like to begin?</p>
+        <div class="begin-row">
+          <a class="go go-history" href="../#history"><span class="go-k">History</span><span class="go-t">Ancient cities and castles</span></a>
+          <a class="go go-wine" href="../#wine"><span class="go-k">Wine</span><span class="go-t">Hill villages and cellars</span></a>
+          <a class="go go-nature" href="../#nature"><span class="go-k">Nature</span><span class="go-t">Trails, coasts and wetlands</span></a>
+        </div>
+        <a class="begin-more" href="#guide">New here? See how the map works <span aria-hidden="true">↓</span></a>
       </div>
     </div>
     <figure class="hero-map" aria-label="Map of Cyprus with every place in the atlas">
@@ -58,6 +63,21 @@
       <li><span class="how-n">1</span><div><h2>Pick a view</h2><p>Each map tells a different story of the same island.</p></div></li>
       <li><span class="how-n">2</span><div><h2>Visit and check in</h2><p>Check in at a place to stamp your passport and earn points.</p></div></li>
       <li><span class="how-n">3</span><div><h2>Compare with friends</h2><p>Make a group, share the link and see who has seen the most.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- Getting around the map -->
+  <section class="section wrap" id="guide" aria-labelledby="guide-h">
+    <header class="sec-head">
+      <p class="eyebrow">Getting around the map</p>
+      <h2 id="guide-h">Five things to try first</h2>
+    </header>
+    <ol class="guide">
+      <li class="rise"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9" y="17" width="12" height="14" rx="7" fill="currentColor"/></svg></span><h3>Switch the view</h3><p>History, Wine and Nature sit at the top of the panel. The map changes its look, its places and its key.</p></li>
+      <li class="rise" style="--d:60ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 40s-11-11-11-19a11 11 0 0 1 22 0c0 8-11 19-11 19Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="21" r="4" fill="currentColor"/></svg></span><h3>Open a place</h3><p>Tap a pin or a name in the list for its story, photos, how long to allow and the drive to nearby places.</p></li>
+      <li class="rise" style="--d:120ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 24h32" stroke="currentColor" stroke-width="2"/><rect x="8" y="21" width="9" height="6" rx="1.5" fill="currentColor" opacity=".3"/><rect x="20" y="20" width="9" height="8" rx="1.5" fill="currentColor"/><rect x="32" y="21" width="8" height="6" rx="1.5" fill="currentColor" opacity=".3"/></svg></span><h3>Step through time</h3><p>On the historical map, move period by period from the first villages to the Ottoman island.</p></li>
+      <li class="rise" style="--d:180ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="12" cy="36" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="36" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 36h14a6 6 0 0 0 0-12H18a6 6 0 0 1 0-12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/></svg></span><h3>Plan a day</h3><p>Choose <b>Plan a day</b> for ready-made trips, or pick your interests and let the map fit the best stops into your time.</p></li>
+      <li class="rise" style="--d:240ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 38 18 18l7 10 5-7 12 17Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><h3>Tilt into 3D</h3><p>The mountain button raises the terrain, so you can see the Troodos and the Kyrenia range rise from the plain.</p></li>
     </ol>
   </section>
 
