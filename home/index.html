@@ -2,178 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+  // Old invite links pointed here. Friends now has its own page.
+  if (new URLSearchParams(location.search).has("join")) location.replace("../friends/" + location.search);
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kypros</title>
-<meta name="description" content="Your Cyprus: the places you've seen, your progress across history, wine, nature, villages and food, and your friends' leaderboard.">
+<meta name="description" content="Places in Cyprus worth visiting today. Pick one and the map opens on it, ready to explore and check in.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=Source+Sans+3:wght@400;500;600;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..500&family=Barlow+Condensed:wght@600;700&display=swap">
-<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../site/base.css">
+<link rel="stylesheet" href="../site/nav.css">
+<link rel="stylesheet" href="slides.css">
 </head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="bar">
-  <div class="wrap bar-in">
-    <a class="brand" href="./" aria-label="Kypros home"><b>Kypros</b><span>Κύπρος · Kıbrıs</span></a>
-    <nav class="nav" aria-label="Main">
-      <a href="../#history">Historical</a>
-      <a href="../#wine">Wine</a>
-      <a href="../#nature">Nature</a>
-      <a href="../#villages">Villages</a>
-      <a href="../#table">Table</a>
-      <a href="#passport">Passport</a>
-      <a href="#friends">Friends</a>
-    </nav>
-    <a class="btn btn-ink bar-cta" href="../#history">Open the map <span aria-hidden="true">→</span></a>
-  </div>
-</header>
+<body data-page="home">
+<a class="skip" href="#show">Skip to the places</a>
+<script src="data.js"></script>
+<header class="k-bar" id="k-bar"></header>
+<script src="../site/nav.js"></script>
 
-<main id="main">
-  <!-- Your island: progress at a glance -->
-  <section class="hero wrap" aria-labelledby="hero-h">
-    <div class="hero-text">
-      <p class="eyebrow" id="hero-eye">Your Cyprus</p>
-      <h1 id="hero-h">Nine thousand years, one island</h1>
-      <p class="lead" id="hero-lead">Kypros is a map of Cyprus you can read five ways: nine thousand years of history, the wine villages of the hills, the island's wild places, its stone and craft villages, and the foods each village is known for. Pick a view, open the places on it, and plan days out between them. When you visit, check in and watch the island fill in.</p>
-      <dl class="stats" id="stats">
-        <div><dt>Island explored</dt><dd><b data-stat="island">0</b><small>%</small></dd></div>
-        <div><dt>Places visited</dt><dd><b data-stat="visited">0</b><small data-stat="of">of 0</small></dd></div>
-        <div><dt>Points</dt><dd><b data-stat="points">0</b></dd></div>
-        <div><dt>Laurels</dt><dd><b data-stat="laurels">0</b></dd></div>
-      </dl>
-      <div class="begin" id="begin">
-        <p class="begin-l" id="begin-l">Where would you like to begin?</p>
-        <div class="begin-row">
-          <a class="go go-history" href="../#history"><span class="go-k">History</span><span class="go-t">Ancient cities and castles</span></a>
-          <a class="go go-wine" href="../#wine"><span class="go-k">Wine</span><span class="go-t">Hill villages and cellars</span></a>
-          <a class="go go-nature" href="../#nature"><span class="go-k">Nature</span><span class="go-t">Trails, coasts and wetlands</span></a>
-          <a class="go go-villages" href="../#villages"><span class="go-k">Villages</span><span class="go-t">Stone lanes and old crafts</span></a>
-          <a class="go go-table" href="../#table"><span class="go-k">Table</span><span class="go-t">Taste it where it's made</span></a>
-        </div>
-        <a class="begin-more" href="#guide">New here? See how the map works <span aria-hidden="true">↓</span></a>
-      </div>
+<main>
+  <h1 class="sr-only">Places to visit today</h1>
+  <section class="show" id="show" tabindex="-1" aria-roledescription="carousel" aria-label="Places to visit today">
+    <div class="show-track" id="show-track" aria-live="off"></div>
+    <div class="show-ui">
+      <button type="button" class="show-btn show-prev" aria-label="Previous place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="show-dots" id="show-dots" role="group" aria-label="Choose a place"></div>
+      <button type="button" class="show-btn show-next" aria-label="Next place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="show-btn show-play" aria-label="Pause the slideshow" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M9 6v12M15 6v12"/><path class="i-play" d="M8 5l11 7-11 7z"/></svg></button>
     </div>
-    <figure class="hero-map" aria-label="Map of Cyprus with every place in the atlas">
-      <svg id="island" viewBox="0 0 800 420" role="img" aria-labelledby="island-cap"></svg>
-      <figcaption id="island-cap">
-        <span><i class="k k-history"></i>History</span><span><i class="k k-wine"></i>Wine</span><span><i class="k k-nature"></i>Nature</span><span><i class="k k-villages"></i>Villages</span><span><i class="k k-table"></i>Table</span><span><i class="k k-open"></i>Not visited yet</span>
-      </figcaption>
-    </figure>
-  </section>
-
-  <!-- How it works -->
-  <section class="how wrap" aria-label="How it works">
-    <ol>
-      <li><span class="how-n">1</span><div><h2>Pick a view</h2><p>Each map tells a different story of the same island.</p></div></li>
-      <li><span class="how-n">2</span><div><h2>Visit and check in</h2><p>Check in at a place to stamp your passport and earn points.</p></div></li>
-      <li><span class="how-n">3</span><div><h2>Compare with friends</h2><p>Make a group, share the link and see who has seen the most.</p></div></li>
-    </ol>
-  </section>
-
-  <!-- Getting around the map -->
-  <section class="section wrap" id="guide" aria-labelledby="guide-h">
-    <header class="sec-head">
-      <p class="eyebrow">Getting around the map</p>
-      <h2 id="guide-h">Five things to try first</h2>
-    </header>
-    <ol class="guide">
-      <li class="rise"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9" y="17" width="12" height="14" rx="7" fill="currentColor"/></svg></span><h3>Switch the view</h3><p>History, Wine, Nature, Villages and Table sit at the top of the panel. The map changes its look, its places and its key.</p></li>
-      <li class="rise" style="--d:60ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 40s-11-11-11-19a11 11 0 0 1 22 0c0 8-11 19-11 19Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="21" r="4" fill="currentColor"/></svg></span><h3>Open a place</h3><p>Tap a pin or a name in the list for its story, photos, how long to allow and the drive to nearby places.</p></li>
-      <li class="rise" style="--d:120ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 24h32" stroke="currentColor" stroke-width="2"/><rect x="8" y="21" width="9" height="6" rx="1.5" fill="currentColor" opacity=".3"/><rect x="20" y="20" width="9" height="8" rx="1.5" fill="currentColor"/><rect x="32" y="21" width="8" height="6" rx="1.5" fill="currentColor" opacity=".3"/></svg></span><h3>Step through time</h3><p>On the historical map, move period by period from the first villages to the Ottoman island.</p></li>
-      <li class="rise" style="--d:180ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="12" cy="36" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="36" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 36h14a6 6 0 0 0 0-12H18a6 6 0 0 1 0-12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/></svg></span><h3>Plan a day</h3><p>Choose <b>Plan a day</b> for ready-made trips, or pick your interests and let the map fit the best stops into your time.</p></li>
-      <li class="rise" style="--d:240ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 38 18 18l7 10 5-7 12 17Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><h3>Tilt into 3D</h3><p>The mountain button raises the terrain, so you can see the Troodos and the Kyrenia range rise from the plain.</p></li>
-    </ol>
-  </section>
-
-  <!-- The five views -->
-  <section class="section wrap" id="views" aria-labelledby="views-h">
-    <header class="sec-head">
-      <p class="eyebrow">Five maps, one island</p>
-      <h2 id="views-h">Five ways to see Cyprus</h2>
-      <p>The same island, read five ways. Switch between them on the map at any time; every place belongs to one view, and many sit only a short drive from places in the others.</p>
-    </header>
-    <div class="views" id="view-cards"></div>
-  </section>
-
-  <!-- Across views -->
-  <section class="section threads-sec" aria-labelledby="threads-h">
-    <div class="wrap">
-      <header class="sec-head">
-        <p class="eyebrow">Where the views meet</p>
-        <h2 id="threads-h">Follow a story across the maps</h2>
-        <p>Some of the island's best stories run through more than one view. Follow a thread from a castle to a wine, or from a shrine to a salt lake.</p>
-      </header>
-      <div class="threads" id="threads"></div>
-    </div>
-  </section>
-
-  <!-- Passport -->
-  <section class="section wrap" id="passport" aria-labelledby="passport-h">
-    <header class="sec-head sec-row">
-      <div>
-        <p class="eyebrow">Your passport</p>
-        <h2 id="passport-h">Places you've seen</h2>
-      </div>
-      <div class="filters" role="group" aria-label="Show places from">
-        <button class="chip" data-f="all" aria-pressed="true">All</button>
-        <button class="chip" data-f="history" aria-pressed="false">Historical</button>
-        <button class="chip" data-f="wine" aria-pressed="false">Wine</button>
-        <button class="chip" data-f="nature" aria-pressed="false">Nature</button>
-        <button class="chip" data-f="villages" aria-pressed="false">Villages</button>
-        <button class="chip" data-f="table" aria-pressed="false">Table</button>
-      </div>
-    </header>
-    <div class="passport-grid">
-      <div class="stamps" id="stamps"></div>
-      <aside class="side" aria-label="Activity">
-        <div class="panel">
-          <h3>Recent visits</h3>
-          <ol class="recent" id="recent"></ol>
-        </div>
-        <div class="panel">
-          <h3>Worth seeing next</h3>
-          <ul class="next" id="next"></ul>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- Friends -->
-  <section class="section wrap" id="friends" aria-labelledby="friends-h">
-    <div class="friends">
-      <header class="sec-head">
-        <p class="eyebrow">Friends</p>
-        <h2 id="friends-h">Leaderboard</h2>
-        <p>Make a group, send the invite link, and compare points and how much of the island each of you has seen.</p>
-      </header>
-      <div class="board" id="board" aria-live="polite"></div>
-    </div>
-  </section>
-
-  <!-- Plan a day -->
-  <section class="section wrap" aria-labelledby="plan-h">
-    <header class="sec-head sec-row">
-      <div>
-        <p class="eyebrow">Plan a day</p>
-        <h2 id="plan-h">Ready-made days</h2>
-      </div>
-      <p class="sec-note">Open a view on the map and choose <b>Plan a day</b> to see these on the map, or build your own.</p>
-    </header>
-    <div class="trips" id="trips"></div>
   </section>
 </main>
 
-<footer class="foot">
-  <div class="wrap foot-in">
-    <p><b>Kypros Atlas</b> · Roads and places © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, via Overture Maps · Terrain: Copernicus DEM GLO-30 © ESA</p>
-    <p><a href="../credits.html">Image credits</a> · <a href="https://github.com/GeorgePhilippou/kypros-atlas">Source on GitHub</a></p>
-  </div>
-</footer>
-
-<script src="data.js"></script>
-<script src="../game/config.js"></script>
-<script src="../game/scoring.js"></script>
-<script src="../game/friends.js"></script>
-<script src="home.js"></script>
+<script src="../site/slug.js"></script>
+<script src="slides.js"></script>
+<script src="slideshow.js"></script>
 </body>
 </html>
