@@ -528,6 +528,7 @@ body[data-mode="history"] main:not(.near) .pin:not(.must):not(.stop) .lbl { opac
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
+<link rel="stylesheet" href="game/game.css">
 </head>
 <body>
 <main id="main">
@@ -2029,5 +2030,9 @@ initMap(MODES[start] ? start : "history");
 setMode(MODES[start] ? start : "history", true);
 
 </script>
+<script src="game/config.js"></script>
+<script src="game/scoring.js"></script>
+<script src="game/friends.js"></script>
+<script src="game/game.js"></script>
 
 </body></html>
