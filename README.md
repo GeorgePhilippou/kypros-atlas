@@ -10,4 +10,4 @@ Static site: open `index.html` through any web server. Built with [MapLibre GL J
 
 - Roads and places: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, via Overture Maps
 - Terrain: Copernicus DEM GLO-30 © ESA
-- Photos: Wikimedia Commons
+- Images: Wikimedia Commons, resized. Authors and licences are listed in [credits.html](credits.html)
