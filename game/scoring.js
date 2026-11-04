@@ -45,5 +45,21 @@ const SCORING = {
   "Petra tou Romiou": {"r": 1, "e": 1, "i": 2, "s": 63, "z": 700, "q": "Who is said to have risen from the foam here?", "a": ["Aphrodite", "Artemis", "Athena"]},
   "Akrotiri Salt Lake": {"r": 2, "e": 1, "i": 2, "s": 3, "z": 3000, "q": "Which large birds stop here on migration, along with flamingos?", "a": ["Cranes", "Pelicans", "Storks"]},
   "Larnaca Salt Lake": {"r": 1, "e": 1, "i": 2, "s": 11, "z": 2500, "q": "Which pink birds spend the winter here?", "a": ["Greater flamingos", "Roseate spoonbills", "Scarlet ibises"]},
-  "Cape Greco": {"r": 1, "e": 2, "i": 2, "s": 7, "z": 2500, "q": "What is the natural arch here called?", "a": ["Kamara tou Koraka", "Petra tou Romiou", "Moutti tis Sotiras"]}
+  "Cape Greco": {"r": 1, "e": 2, "i": 2, "s": 7, "z": 2500, "q": "What is the natural arch here called?", "a": ["Kamara tou Koraka", "Petra tou Romiou", "Moutti tis Sotiras"]},
+  "Fikardou": {"r": 3, "e": 2, "i": 2, "s": 16, "z": 800, "q": "What are the houses here known for?", "a": ["Stone walls and wooden balconies", "Painted plaster domes", "Thatched roofs"]},
+  "Kalopanagiotis": {"r": 2, "e": 2, "i": 2, "s": 70, "z": 1000, "q": "Which monastery stands here?", "a": ["St Ioannis Lampadistis", "Kykkos", "Stavrovouni"]},
+  "Kakopetria": {"r": 1, "e": 2, "i": 2, "s": 9, "z": 900, "q": "Which festival is held here each September?", "a": ["The Sweet Preserves Festival", "The Cherry Festival", "The Pasteli Festival"]},
+  "Pedoulas": {"r": 2, "e": 2, "i": 2, "s": 11, "z": 800, "q": "Which fruit has a festival named after it here?", "a": ["Cherries", "Mandarins", "Figs"]},
+  "Foini": {"r": 2, "e": 2, "i": 2, "s": 92, "z": 800, "q": "Which craft is Foini famous for?", "a": ["Pottery", "Lace", "Glassblowing"]},
+  "Laneia": {"r": 2, "e": 1, "i": 1, "s": 26, "z": 700, "q": "What is this village known for today?", "a": ["Its art scene", "Its salt pans", "Its carob mills"]},
+  "Tochni": {"r": 2, "e": 1, "i": 1, "s": 33, "z": 700, "q": "What kind of houses line the village?", "a": ["Stone houses", "Mud-brick towers", "Timber chalets"]},
+  "Alona": {"r": 3, "e": 2, "i": 1, "s": 44, "z": 800, "q": "Which two peaks is the village between?", "a": ["Madari and Papoutsa", "Chionistra and Tripylos", "Stavrovouni and Kyrenia"]},
+  "Geroskipou": {"r": 1, "e": 1, "i": 2, "s": 95, "z": 1200, "q": "Which sweet is protected under the Geroskipou name?", "a": ["Loukoumi", "Pasteli", "Glydjista"]},
+  "Anogyra": {"r": 2, "e": 2, "i": 2, "s": 9, "z": 800, "q": "What is pasteli made from?", "a": ["Carob honey", "Grape juice", "Almond milk"]},
+  "Agros": {"r": 2, "e": 2, "i": 2, "s": 50, "z": 900, "q": "Which flower is Agros known for?", "a": ["Damask rose", "Orchid", "Cyclamen"]},
+  "Koilani": {"r": 2, "e": 2, "i": 1, "s": 20, "z": 800, "q": "Which fried sweet is Koilani known for?", "a": ["Glydjista", "Loukoumades", "Baklava"]},
+  "Arakapas": {"r": 3, "e": 1, "i": 1, "s": 70, "z": 1000, "q": "Which fruit is Arakapas known for?", "a": ["Mandarins", "Cherries", "Figs"]},
+  "Lysos": {"r": 3, "e": 2, "i": 1, "s": 36, "z": 900, "q": "Which fruit are maxilles made from?", "a": ["Figs", "Apricots", "Plums"]},
+  "Sotira": {"r": 2, "e": 1, "i": 1, "s": 16, "z": 1500, "q": "Which protected vegetable is named after Sotira?", "a": ["Kolokasi", "Artichoke", "Okra"]},
+  "Limnatis": {"r": 3, "e": 2, "i": 1, "s": 14, "z": 800, "q": "Which nut is used in glyko amygdalou?", "a": ["Almonds", "Hazelnuts", "Walnuts"]}
 };

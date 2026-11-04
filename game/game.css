@@ -81,3 +81,13 @@ body[data-mode="nature"] .g-dialog h2 { font-weight: 700; text-transform: upperc
 .g-quizzes li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
 .g-quizzes button { min-height: 44px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--track); cursor: pointer; white-space: nowrap; font-weight: 600; }
 .g-quizzes button:disabled { cursor: default; opacity: .6; }
+
+/* Five filters: icon above label, with each new filter's own accent */
+.tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.tab-thumb { width: calc((100% - 16px) / 5); }
+.tab { flex-direction: column; gap: 2px; padding-inline: 2px; font-size: 12px !important; letter-spacing: 0 !important; min-width: 0; }
+.tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+body[data-filter="villages"] { --acc: #8a4a24; --pin: #b5562b; }
+body[data-filter="villages"] .tab-thumb { background: var(--acc); }
+body[data-filter="villages"] .eyebrow { color: #a24a20; }
+body[data-filter="table"] { --acc: #e8b45c; --pin: #b4541f; }

@@ -8,6 +8,10 @@ Add this line before `</head>` in `index.html`:
 
     <link rel="stylesheet" href="game/game.css">
 
+Add this line before the atlas's main script:
+
+    <script src="game/filters.js"></script>
+
 Add these lines straight after the atlas's closing `</script>`:
 
     <script src="game/config.js"></script>
@@ -28,6 +32,10 @@ They stay off until `config.js` has a Supabase project:
 2. Run `supabase.sql` in its SQL editor.
 3. Paste the project URL and anon key into `config.js`.
 4. Add the site's address under Authentication, then URL Configuration.
+
+## Filters
+
+`filters.js` adds Villages and Table. Each borrows an existing map theme, so a new filter needs no new terrain or fonts.
 
 ## Before launch
 
