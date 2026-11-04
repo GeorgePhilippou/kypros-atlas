@@ -15,9 +15,12 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const num = n => Math.round(n).toLocaleString("en-GB");
-  const MODES = ["history", "wine", "nature"];
-  const COLOR = { history: "#a3281b", wine: "#7a1c3a", nature: "#e2592b" };
-  const LABEL = { history: "Historical", wine: "Wine", nature: "Nature" };
+  // Every filter on the map, in the map's tab order: history, wine, nature, villages, table.
+  const MODES = Object.keys(D.modes);
+  // One colour per filter, used for pins, dots and labels. Villages and Table use their accents from
+  // game/game.css until their own map themes land; change them here and in home.css (--villages, --table).
+  const COLOR = { history: "#a3281b", wine: "#7a1c3a", nature: "#e2592b", villages: "#8a4a24", table: "#c98a1e" };
+  const LABEL = Object.fromEntries(MODES.map(m => [m, m === "history" ? "Historical" : D.modes[m].label]));
   const mapUrl = m => `../#${m}`;
   const byName = Object.fromEntries(D.places.map(p => [p.name, p]));
   const been = n => !!S.visits[n];
@@ -64,11 +67,13 @@
     hero: { land: "#e3ded5", stroke: "#4a453e" },
     history: { land: "#e3ded5", stroke: "#4a453e", pin: p => `<circle cx="${p.x}" cy="${p.y}" r="${p.must ? 5.5 : 4}" fill="#a3281b" stroke="#faf8f4" stroke-width="1.5"/>` },
     wine: { land: "#c9cf8e", stroke: "#f8f1d8", pin: p => `<circle cx="${p.x}" cy="${p.y}" r="${p.must ? 6 : 5}" fill="#7a1c3a" stroke="#f0d592" stroke-width="2"/>` },
-    nature: { land: "#c3c79a", stroke: "#3d6876", pin: p => `<circle cx="${p.x}" cy="${p.y}" r="${p.must ? 6 : 5}" fill="#e2592b" stroke="#fff" stroke-width="2"/>` }
+    nature: { land: "#c3c79a", stroke: "#3d6876", pin: p => `<circle cx="${p.x}" cy="${p.y}" r="${p.must ? 6 : 5}" fill="#e2592b" stroke="#fff" stroke-width="2"/>` },
+    villages: { land: "#e6d6bd", stroke: "#8a4a24", pin: p => `<rect x="${p.x - (p.must ? 5.5 : 4.5)}" y="${p.y - (p.must ? 5.5 : 4.5)}" width="${p.must ? 11 : 9}" height="${p.must ? 11 : 9}" rx="2" fill="${COLOR.villages}" stroke="#fbf5ea" stroke-width="2"/>` },
+    table: { land: "#4a2a20", stroke: "#e8b45c", pin: p => `<circle cx="${p.x}" cy="${p.y}" r="${p.must ? 6 : 5}" fill="#e8b45c" stroke="#2a1420" stroke-width="2"/>` }
   };
   function drawIsland(svg, land, opts) {
     const [, , W, H] = svg.getAttribute("viewBox").split(" ").map(Number), P = projector(W, H, opts.margin ?? 12), st = STYLE[opts.style];
-    const list = D.places.filter(p => !opts.mode || p.mode === opts.mode).map(p => { const [x, y] = P(p.lon, p.lat); return { ...p, x: x.toFixed(1), y: y.toFixed(1) }; });
+    const list = D.places.filter(p => (!opts.mode || p.mode === opts.mode) && (!opts.only || opts.only.includes(p.name))).map(p => { const [x, y] = P(p.lon, p.lat); return { ...p, x: x.toFixed(1), y: y.toFixed(1) }; });
     let pins;
     if (opts.style === "hero") {
       const recent = new Set(S.log.slice(0, 3).map(l => l.name));
@@ -90,17 +95,19 @@
     wine: { eye: "Wine country", lead: "The hill villages of the vine, along six wine routes where native Xynisteri and Maratheftiko grow." },
     nature: { eye: "Trails & reserves", lead: "Gorges, cedar forests, turtle beaches and flamingo wetlands on a topographic map." }
   };
+  // Filters without hand-written copy use their own eyebrow and blurb from the map
+  const copyFor = m => COPY[m] || { eye: D.modes[m].eyebrow, lead: D.modes[m].blurb };
   $("#view-cards").innerHTML = MODES.map(m => {
     const all = D.places.filter(p => p.mode === m), seen = all.filter(p => been(p.name)).length, pct = all.length ? Math.round(seen / all.length * 100) : 0;
     const must = all.filter(p => p.must).length, trips = (D.trips[m] || []).length;
-    const title = { history: "Historical", wine: "Wine", nature: "Nature" }[m];
+    const title = LABEL[m], unit = D.modes[m].unit || "places";
     return `<a class="view v-${m} rise" href="${mapUrl(m)}">
       <div class="view-map"><svg viewBox="0 0 400 225" aria-hidden="true" data-mini="${m}"></svg></div>
       <div class="view-body">
-        <p class="eyebrow">${COPY[m].eye}</p>
+        <p class="eyebrow">${esc(copyFor(m).eye)}</p>
         <h3>${title}</h3>
-        <p>${COPY[m].lead}</p>
-        <div class="view-facts"><span>${all.length} places</span><span>${must} must-sees</span><span>${trips} day trips</span></div>
+        <p>${esc(copyFor(m).lead)}</p>
+        <div class="view-facts"><span>${all.length} ${m === "history" || m === "wine" || m === "nature" ? "places" : esc(unit)}</span><span>${must} must-sees</span><span>${trips} day trips</span></div>
         <div class="view-prog"><span>${seen ? `${seen} of ${all.length} visited` : "Nothing visited yet"}</span><span class="barr"><i data-w="${pct}"></i></span></div>
         <span class="view-go">Open the ${title.toLowerCase()} map <span aria-hidden="true">→</span></span>
       </div></a>`;
@@ -162,7 +169,7 @@
   $("#trips").innerHTML = MODES.map(m => (D.trips[m] || [])[0] && { m, t: D.trips[m][0] }).filter(Boolean).map(({ m, t }, k) => {
     const first = t.stops.map(n => byName[n]).find(p => p && p.photo);
     return `<a class="trip rise" style="--d:${k * 60}ms" href="${mapUrl(m)}">
-      <span class="trip-img">${first && first.photo ? `<img src="img/${first.photo}" alt="" loading="lazy">` : ""}</span>
+      <span class="trip-img trip-img-${m}">${first && first.photo ? `<img src="img/${first.photo}" alt="" loading="lazy">` : `<svg viewBox="0 0 400 170" aria-hidden="true" data-trip-map="${m}" data-stops="${esc(JSON.stringify(t.stops))}"></svg>`}</span>
       <span class="trip-body"><span class="eyebrow" style="color:${COLOR[m]}">${LABEL[m]} · from ${esc(t.base.replace(" (Troodos)", ""))}</span><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p>
       <span class="trip-stops">${t.stops.map((n, j) => `<span><i>${j + 1}</i>${esc(n)}</span>`).join("")}</span></span></a>`;
   }).join("");
@@ -220,6 +227,8 @@
   fetch("../data/base.json").then(r => r.json()).then(B => {
     drawIsland($("#island"), B.land, { style: "hero", margin: 16 });
     document.querySelectorAll("[data-mini]").forEach(svg => drawIsland(svg, B.land, { style: svg.dataset.mini, mode: svg.dataset.mini, margin: 10 }));
+    // trips without a photo show their stops on the filter's own mini map
+    document.querySelectorAll("[data-trip-map]").forEach(svg => drawIsland(svg, B.land, { style: svg.dataset.tripMap, mode: svg.dataset.tripMap, only: JSON.parse(svg.dataset.stops), margin: 12 }));
   }).catch(() => { $("#island").closest("figure").hidden = true; });
   const reveal = el => { el.classList.add("in"); el.querySelectorAll("[data-w]").forEach(i => { i.style.width = i.dataset.w + "%"; }); };
   const items = document.querySelectorAll(".rise");

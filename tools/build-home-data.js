@@ -6,9 +6,14 @@ const root = path.join(__dirname, ".."), html = fs.readFileSync(path.join(root, 
 const from = html.indexOf("const PHOTOS = "), to = html.indexOf("// ---------- Hand-placed map lettering");
 const north = html.match(/^const NORTH = new Set\(\[[^\]]*\]\);$/m);
 if (from < 0 || to < 0 || !north) throw new Error("index.html layout changed: update tools/build-home-data.js");
+// Villages and Table live in game/filters.js. The atlas loads that file first and merges it in with
+// the `if (typeof FILTERS !== "undefined") { … }` block in index.html, so do exactly the same here.
+const filters = fs.readFileSync(path.join(root, "game", "filters.js"), "utf8");
+const merge = html.match(/^if \(typeof FILTERS !== "undefined"\) \{\n[\s\S]*?\n\}$/m);
+if (!merge) throw new Error("index.html no longer merges game/filters.js the way this script expects: update tools/build-home-data.js");
 const ctx = { window: {}, console };
 vm.createContext(ctx);
-vm.runInContext(html.slice(from, to) + "\n" + north[0] + "\nthis.out = { PHOTOS, PLACES, VISIT, MODES, ERAS, TYPES, KIND_LABEL, TRIPS, BASES, INTERESTS, NORTH: [...NORTH] };", ctx);
+vm.runInContext(filters + "\n" + html.slice(from, to) + "\n" + merge[0] + "\n" + north[0] + "\nthis.out = { PHOTOS, PLACES, VISIT, MODES, ERAS, TYPES, KIND_LABEL, TRIPS, BASES, INTERESTS, NORTH: [...NORTH] };", ctx);
 const { PHOTOS, PLACES, VISIT, MODES, ERAS, TYPES, KIND_LABEL, TRIPS, BASES, INTERESTS, NORTH } = ctx.out;
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const imgDir = path.join(root, "home", "img");
@@ -27,13 +32,13 @@ for (const [mode, list] of Object.entries(PLACES)) for (const p of list) {
   const v = VISIT[p.name] || {};
   places.push({
     name: p.name, gr: p.gr, mode, lat: p.lat, lon: p.lon, district: p.district, tag: p.tag,
-    kind: mode === "history" ? TYPES[p.type] : mode === "nature" ? KIND_LABEL[p.kind] : "Winery or wine village",
+    kind: mode === "history" ? TYPES[p.type] : mode === "nature" ? KIND_LABEL[p.kind] : mode === "wine" ? "Winery or wine village" : p.kindLabel,
     date: p.date || null, era: p.era ? ERAS[p.era].n : null, must: !!v.must, hours: v.v || 1, tags: v.tags || [],
     blurb: p.desc, photo, north: NORTH.includes(p.name)
   });
 }
 const data = {
-  modes: Object.fromEntries(Object.entries(MODES).map(([k, m]) => [k, { label: m.label, eyebrow: m.eyebrow, title: m.title, blurb: m.blurb }])),
+  modes: Object.fromEntries(Object.entries(MODES).map(([k, m]) => [k, { label: m.label, eyebrow: m.eyebrow, title: m.title, blurb: m.blurb, unit: m.unit }])),
   interests: INTERESTS, places,
   trips: Object.fromEntries(Object.entries(TRIPS).map(([m, list]) => [m, list.map(t => ({ name: t.n, base: BASES[t.base].n, stops: t.stops, blurb: t.d }))]))
 };

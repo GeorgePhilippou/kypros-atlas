@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kypros</title>
-<meta name="description" content="Your Cyprus: the places you've seen, your progress across history, wine and nature, and your friends' leaderboard.">
+<meta name="description" content="Your Cyprus: the places you've seen, your progress across history, wine, nature, villages and food, and your friends' leaderboard.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=Source+Sans+3:wght@400;500;600;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..500&family=Barlow+Condensed:wght@600;700&display=swap">
@@ -19,6 +19,8 @@
       <a href="../#history">Historical</a>
       <a href="../#wine">Wine</a>
       <a href="../#nature">Nature</a>
+      <a href="../#villages">Villages</a>
+      <a href="../#table">Table</a>
       <a href="#passport">Passport</a>
       <a href="#friends">Friends</a>
     </nav>
@@ -32,7 +34,7 @@
     <div class="hero-text">
       <p class="eyebrow" id="hero-eye">Your Cyprus</p>
       <h1 id="hero-h">Nine thousand years, one island</h1>
-      <p class="lead" id="hero-lead">Kypros is a map of Cyprus you can read three ways: nine thousand years of history, the wine villages of the hills, and the island's wild places. Pick a view, open the places on it, and plan days out between them. When you visit, check in and watch the island fill in.</p>
+      <p class="lead" id="hero-lead">Kypros is a map of Cyprus you can read five ways: nine thousand years of history, the wine villages of the hills, the island's wild places, its stone and craft villages, and the foods each village is known for. Pick a view, open the places on it, and plan days out between them. When you visit, check in and watch the island fill in.</p>
       <dl class="stats" id="stats">
         <div><dt>Island explored</dt><dd><b data-stat="island">0</b><small>%</small></dd></div>
         <div><dt>Places visited</dt><dd><b data-stat="visited">0</b><small data-stat="of">of 0</small></dd></div>
@@ -45,6 +47,8 @@
           <a class="go go-history" href="../#history"><span class="go-k">History</span><span class="go-t">Ancient cities and castles</span></a>
           <a class="go go-wine" href="../#wine"><span class="go-k">Wine</span><span class="go-t">Hill villages and cellars</span></a>
           <a class="go go-nature" href="../#nature"><span class="go-k">Nature</span><span class="go-t">Trails, coasts and wetlands</span></a>
+          <a class="go go-villages" href="../#villages"><span class="go-k">Villages</span><span class="go-t">Stone lanes and old crafts</span></a>
+          <a class="go go-table" href="../#table"><span class="go-k">Table</span><span class="go-t">Taste it where it's made</span></a>
         </div>
         <a class="begin-more" href="#guide">New here? See how the map works <span aria-hidden="true">↓</span></a>
       </div>
@@ -52,7 +56,7 @@
     <figure class="hero-map" aria-label="Map of Cyprus with every place in the atlas">
       <svg id="island" viewBox="0 0 800 420" role="img" aria-labelledby="island-cap"></svg>
       <figcaption id="island-cap">
-        <span><i class="k k-history"></i>History</span><span><i class="k k-wine"></i>Wine</span><span><i class="k k-nature"></i>Nature</span><span><i class="k k-open"></i>Not visited yet</span>
+        <span><i class="k k-history"></i>History</span><span><i class="k k-wine"></i>Wine</span><span><i class="k k-nature"></i>Nature</span><span><i class="k k-villages"></i>Villages</span><span><i class="k k-table"></i>Table</span><span><i class="k k-open"></i>Not visited yet</span>
       </figcaption>
     </figure>
   </section>
@@ -73,7 +77,7 @@
       <h2 id="guide-h">Five things to try first</h2>
     </header>
     <ol class="guide">
-      <li class="rise"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9" y="17" width="12" height="14" rx="7" fill="currentColor"/></svg></span><h3>Switch the view</h3><p>History, Wine and Nature sit at the top of the panel. The map changes its look, its places and its key.</p></li>
+      <li class="rise"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9" y="17" width="12" height="14" rx="7" fill="currentColor"/></svg></span><h3>Switch the view</h3><p>History, Wine, Nature, Villages and Table sit at the top of the panel. The map changes its look, its places and its key.</p></li>
       <li class="rise" style="--d:60ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 40s-11-11-11-19a11 11 0 0 1 22 0c0 8-11 19-11 19Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="21" r="4" fill="currentColor"/></svg></span><h3>Open a place</h3><p>Tap a pin or a name in the list for its story, photos, how long to allow and the drive to nearby places.</p></li>
       <li class="rise" style="--d:120ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 24h32" stroke="currentColor" stroke-width="2"/><rect x="8" y="21" width="9" height="6" rx="1.5" fill="currentColor" opacity=".3"/><rect x="20" y="20" width="9" height="8" rx="1.5" fill="currentColor"/><rect x="32" y="21" width="8" height="6" rx="1.5" fill="currentColor" opacity=".3"/></svg></span><h3>Step through time</h3><p>On the historical map, move period by period from the first villages to the Ottoman island.</p></li>
       <li class="rise" style="--d:180ms"><span class="g-ill" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="12" cy="36" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="36" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 36h14a6 6 0 0 0 0-12H18a6 6 0 0 1 0-12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/></svg></span><h3>Plan a day</h3><p>Choose <b>Plan a day</b> for ready-made trips, or pick your interests and let the map fit the best stops into your time.</p></li>
@@ -81,12 +85,12 @@
     </ol>
   </section>
 
-  <!-- The three views -->
+  <!-- The five views -->
   <section class="section wrap" id="views" aria-labelledby="views-h">
     <header class="sec-head">
-      <p class="eyebrow">Three maps, one island</p>
-      <h2 id="views-h">Three ways to see Cyprus</h2>
-      <p>The same island, read three ways. Switch between them on the map at any time; every place belongs to one view, and many sit only a short drive from places in the others.</p>
+      <p class="eyebrow">Five maps, one island</p>
+      <h2 id="views-h">Five ways to see Cyprus</h2>
+      <p>The same island, read five ways. Switch between them on the map at any time; every place belongs to one view, and many sit only a short drive from places in the others.</p>
     </header>
     <div class="views" id="view-cards"></div>
   </section>
@@ -115,6 +119,8 @@
         <button class="chip" data-f="history" aria-pressed="false">Historical</button>
         <button class="chip" data-f="wine" aria-pressed="false">Wine</button>
         <button class="chip" data-f="nature" aria-pressed="false">Nature</button>
+        <button class="chip" data-f="villages" aria-pressed="false">Villages</button>
+        <button class="chip" data-f="table" aria-pressed="false">Table</button>
       </div>
     </header>
     <div class="passport-grid">
