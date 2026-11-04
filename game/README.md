@@ -1,6 +1,6 @@
 # Kypros game layer
 
-Adds check-ins, points, a Trophy Room and friends leaderboards to the Kypros Atlas, following the Scoring Mechanics Handbook.
+Adds check-ins, points, quizzes, a Trophy Room and friends leaderboards to the Kypros Atlas, following the Scoring Mechanics Handbook.
 
 ## Install
 
@@ -12,6 +12,7 @@ Add these lines straight after the atlas's closing `</script>`:
 
     <script src="game/config.js"></script>
     <script src="game/scoring.js"></script>
+    <script src="game/quiz.js"></script>
     <script src="game/friends.js"></script>
     <script src="game/game.js"></script>
 
@@ -30,6 +31,6 @@ They stay off until `config.js` has a Supabase project:
 
 ## Before launch
 
-- Every score and question in `scoring.js` is a draft and needs approving.
+- Every score and question in `scoring.js` and `quiz.js` is a draft and needs approving.
 - Check questions and GPS zones on site.
 - Scores are worked out on the player's device, so a determined friend could cheat.
