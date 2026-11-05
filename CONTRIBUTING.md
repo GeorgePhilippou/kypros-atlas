@@ -1,4 +1,4 @@
-# Working on Kypros Atlas together
+# Working on KypriGo together
 
 Two people (and their Claude sessions) work on this repository at the same time. These rules keep us out of each other's way.
 

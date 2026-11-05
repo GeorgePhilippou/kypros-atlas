@@ -1,6 +1,6 @@
-# Kypros game layer
+# KypriGo game layer
 
-Adds check-ins, points, quizzes, a Trophy Room and friends leaderboards to the Kypros Atlas, following the Scoring Mechanics Handbook.
+Adds check-ins, points, quizzes, a Trophy Room and friends leaderboards to KypriGo, following the Scoring Mechanics Handbook.
 
 ## Install
 

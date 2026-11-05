@@ -1,4 +1,4 @@
-# Kypros Atlas
+# KypriGo
 
 An interactive atlas of Cyprus, with separate map views for history, wine and nature, plus day planning with road routing.
 

@@ -1,4 +1,4 @@
--- Kypros, the game: friends leaderboards.
+-- KypriGo, the game: friends leaderboards.
 -- Run this once in the Supabase SQL editor.
 -- Tables stay closed to direct access. The app only uses the functions below,
 -- each of which acts on the signed-in player.
