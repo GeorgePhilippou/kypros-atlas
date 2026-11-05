@@ -517,8 +517,40 @@ body[data-mode="wine"] .basepin { background: #f0d592; color: #2a1420; box-shado
 /* labels for lesser sites wait until you zoom in */
 body[data-mode="history"] main:not(.near) .pin:not(.must):not(.stop) .lbl { opacity: 0; visibility: hidden; }
 
+/* ---------- The panel's top bar: the KypriGo row and the map tabs ---------- */
+/* On phones the wrapper does nothing, so the phone layout is unchanged */
+.pbar { display: contents; }
+/* ---------- Wide screens: the whole panel is one scroll; the top bar stays pinned ---------- */
+@media (min-width: 861px) {
+  .panel { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--rule) transparent; scroll-padding-top: calc(var(--pbar-h, 0px) + 44px); }
+  .top { display: contents; }
+  .pbar { display: grid; gap: 14px; position: sticky; top: 0; z-index: 3; padding: 18px 24px 10px; background: var(--pbg); transition: box-shadow .2s; }
+  .pbar.scrolled { box-shadow: 0 1px 0 var(--rule); }
+  .top > .g-bar { padding: 2px 24px 0; }
+  .top > .views { margin: 8px 0 0; padding: 0 24px; }
+  .intro { padding-top: 14px; padding-bottom: 10px; gap: 6px; }
+  .intro .tl { margin-top: 4px; }
+  .key h3 { margin-bottom: 6px; }
+  .key { padding-bottom: 12px; }
+  .key .scale { margin-top: 8px; gap: 6px 14px; }
+  body[data-mode="history"] .key .bar { letter-spacing: .07em; }
+  .key .symkey { gap: 4px 12px; }
+  .key .symkey li { letter-spacing: .07em; }   /* keeps the two-word labels on one line */
+  .listhead { padding-top: 12px; padding-bottom: 6px; }
+  .places, .trips { overflow: visible; flex: none; }
+  /* The list heading pins just under the top bar once the list is reached */
+  .listhead { position: sticky; top: var(--pbar-h, 0px); z-index: 2; background: var(--pbg); }
+}
+
 /* ---------- Narrow screens ---------- */
 @media (max-width: 860px) {
+  /* Every control gets a hit area of at least 44px without changing how it looks */
+  .brand-home, .tab, .plan-go, .controls button, .chip { position: relative; }
+  /* The zoom buttons are stacked: widen their hit area only, so neighbours do not take each other's taps */
+  .controls button::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: max(100%, 44px); transform: translateX(-50%); }
+  .brand-home::after, .tab::after, .plan-go::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+  /* Chips sit 6px apart: grow them to 38px so neighbours do not overlap */
+  .chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, 38px); transform: translateY(-50%); }
   body { overflow: auto; height: auto; min-height: 100%; display: flex; flex-direction: column; }
   html { height: auto; }
   .panel { display: contents; }
@@ -564,8 +596,10 @@ body[data-mode="history"] main:not(.near) .pin:not(.must):not(.stop) .lbl { opac
 
 <aside class="panel">
   <div class="top">
-    <div class="brand"><a class="brand-home" href="home/" title="Back to the start page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Kypri<em>Go</em></b></a><span>Κύπρος · Kıbrıs</span></div>
-    <div class="tabs" role="tablist" aria-label="Map theme" id="tabs"></div>
+    <div class="pbar" id="pbar">
+      <div class="brand"><a class="brand-home" href="home/" title="Back to the start page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Kypri<em>Go</em></b></a><span>Κύπρος · Kıbrıs</span></div>
+      <div class="tabs" role="tablist" aria-label="Map theme" id="tabs"></div>
+    </div>
     <div class="views" role="tablist" aria-label="View">
       <button role="tab" data-v="places" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Explore the map</button>
       <button role="tab" data-v="trips" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/></svg>Plan a day</button>
@@ -1275,7 +1309,9 @@ maplibregl.addProtocol("kypros", async params => {
   const dem = params.url.match(/^kypros:\/\/dem\/(\d+\/\d+\/\d+)$/);
   if (dem) {
     if (!DEM_TILES.has(dem[1])) return { data: await flatTile() };
-    return { data: await (await fetch(`dem/${dem[1]}.png`)).arrayBuffer() };
+    // A tile that fails to load is drawn flat instead of raising an error
+    try { const r = await fetch(`dem/${dem[1]}.png`); if (r.ok) return { data: await r.arrayBuffer() }; } catch (e) {}
+    return { data: await flatTile() };
   }
   const [, stack, range] = params.url.match(/^kypros:\/\/glyphs\/([^/]+)\/(.+)$/) || [];
   const name = decodeURIComponent(stack || "").split(",")[0];
@@ -1346,7 +1382,7 @@ function initMap(startTheme) {
       for (const [k, url] of urls) map.getSource(`terrain-${k}`).updateImage({ url, coordinates: corners });
       requestAnimationFrame(() => { map.setPaintProperty(cur, "raster-opacity-transition", { duration: dur(700) }); map.setPaintProperty(cur, "raster-opacity", 1); });
       document.body.classList.add("terrain-ready");
-    });
+    }).catch(() => {});   // No relief image (offline): the map stays usable without it
     positionPins(); document.body.classList.add("map-ready");
     return B;
   })();
@@ -1654,6 +1690,7 @@ async function setMode(m, initial) {
     bindList();
   }
   $("places").scrollTop = 0;
+  if (prev !== m) document.querySelector(".panel").scrollTop = 0;   // a new map starts at the top of the panel
   if (listView === "trips") renderTrips();
   out?.cancel();
   const intro = m === "history" ? [...$("phead").children, ...$("intro").querySelectorAll(".tl, .tl-ends")] : [...$("intro").children];
@@ -2055,9 +2092,17 @@ function closeCard() {
   mapFit();
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape" && current !== null) closeCard(); });
-addEventListener("resize", () => { if (current === null && map) mapFit(true); updateScaleBars(); });
+// Resize the canvas first: the window event can arrive before MapLibre notices, and fitting the old canvas fails
+addEventListener("resize", () => { if (map) map.resize(); if (current === null && map) mapFit(true); updateScaleBars(); });
 
 // ---------- Boot ----------
+// Wide screens: the list heading pins under the panel's top bar, which gets a line once the panel is scrolled
+{
+  const panel = document.querySelector(".panel"), bar = $("pbar");
+  const measure = () => panel.style.setProperty("--pbar-h", bar.offsetHeight + "px");
+  new ResizeObserver(measure).observe(bar); measure();
+  panel.addEventListener("scroll", () => bar.classList.toggle("scrolled", panel.scrollTop > 2), { passive: true });
+}
 renderTabs();
 document.querySelectorAll(".views button").forEach(b => b.onclick = () => setListView(b.dataset.v));
 // A link can also name a place: #wine/omodos opens the Wine map with Omodos selected.

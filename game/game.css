@@ -1,6 +1,8 @@
 /* KYPROS GAME · uses the atlas's theme variables, so it restyles itself with each mode. */
 .g-bar { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 6px 10px; align-items: center; font-family: var(--f-ui); font-size: 13px; color: var(--muted); }
 .g-bar p { margin: 0; white-space: nowrap; }
+/* Phones: a 44px hit area without changing how the buttons look */
+@media (max-width: 860px) { .g-bar button { position: relative; } .g-bar button::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); } }
 .g-bar b { font-family: var(--f-display); font-size: 20px; color: var(--acc); font-variant-numeric: tabular-nums; }
 .g-bar button { min-height: 36px; padding: 0 10px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--track); cursor: pointer; font-family: var(--f-ui); font-size: 13px; font-weight: 600; }
 
@@ -67,7 +69,8 @@ body[data-mode="nature"] .g-dialog h2 { font-weight: 700; text-transform: upperc
 .g-board b { font-family: var(--f-display); font-size: 22px; font-variant-numeric: tabular-nums; }
 .g-board .me { background: var(--track); }
 .g-banner { position: fixed; z-index: 30; left: 50%; bottom: 14px; transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); box-sizing: border-box; margin: 0; padding: 7px 14px; border-radius: 99px; background: var(--ink); color: var(--pbg); font-family: var(--f-ui); font-size: 13px; }
-@media (max-width: 860px) { .g-banner { top: 8px; bottom: auto; } }
+/* Phones and small tablets: keep it at the bottom, clear of the map header, and out of the way while the place card is up */
+@media (max-width: 860px) { .g-banner { bottom: calc(12px + env(safe-area-inset-bottom, 0px)); } body:has(.card:not([hidden])) .g-banner { display: none; } }
 
 .g-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .g-row button { min-height: 44px; padding: 0 14px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--pbg); cursor: pointer; font-family: var(--f-ui); font-size: 14px; font-weight: 600; }
