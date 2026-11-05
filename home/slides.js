@@ -17,5 +17,7 @@ window.KYPROS_SLIDES = [
   { mode: "history", place: "Nea Paphos", image: "img/slides/paphos-odeon.jpg", focus: "40% 45%",
     line: "Sit in the stone odeon, then see the floor mosaics of the Roman houses." },
   { mode: "nature", place: "Akamas Peninsula", image: "img/slides/akamas-blue-lagoon.jpg", focus: "55% 65%",
-    line: "Take a boat from Latchi to the clear water of the Blue Lagoon." }
+    line: "Take a boat from Latchi to the clear water of the Blue Lagoon." },
+  { mode: "nature", place: "Kelefos Bridge", image: "img/slides/kelefos-bridge.jpg", focus: "35% 50%", months: [10, 11, 12],
+    line: "A Venetian bridge hidden in the forest, under plane trees turning gold." }
 ];

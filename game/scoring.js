@@ -61,7 +61,9 @@ const SCORING = {
   "Arakapas": {"r": 3, "e": 1, "i": 1, "s": 70, "z": 1000, "q": "Which fruit is Arakapas known for?", "a": ["Mandarins", "Cherries", "Figs"]},
   "Lysos": {"r": 3, "e": 2, "i": 1, "s": 36, "z": 900, "q": "Which fruit are maxilles made from?", "a": ["Figs", "Apricots", "Plums"]},
   "Sotira": {"r": 2, "e": 1, "i": 1, "s": 16, "z": 1500, "q": "Which protected vegetable is named after Sotira?", "a": ["Kolokasi", "Artichoke", "Okra"]},
-  "Limnatis": {"r": 3, "e": 2, "i": 1, "s": 14, "z": 800, "q": "Which nut is used in glyko amygdalou?", "a": ["Almonds", "Hazelnuts", "Walnuts"]}
+  "Limnatis": {"r": 3, "e": 2, "i": 1, "s": 14, "z": 800, "q": "Which nut is used in glyko amygdalou?", "a": ["Almonds", "Hazelnuts", "Walnuts"]},
+  // Easter egg on the Nature map: earns points and a Wild Card, but stays out of the island %
+  "Kelefos Bridge": {"r": 3, "e": 2, "i": 1, "s": 7, "z": 300, "q": "Which river does the bridge cross?", "a": ["Diarizos", "Kouris", "Ezousa"]}
 };
 
 /* =========================================================
@@ -93,7 +95,9 @@ window.KyprosTrophies = (() => {
     { id: "firstlight", name: "First Light", points: 1111, how: "Check in at Petra tou Romiou around sunrise",
       test: (p, now) => p.name === "Petra tou Romiou" && Math.abs(now - sunrise(now, p.lat, p.lon)) <= 45 * 60e3 },
     { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across any three filters in one day",
-      test: (p, now, state) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size >= 3 }
+      test: (p, now, state) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size >= 3 },
+    { id: "kelefos", name: "Hidden Bridge", points: 555, how: "Find the hidden bridge in the Paphos forest",
+      test: p => p.name === "Kelefos Bridge" }
   ];
   const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 56, name: "Keeper of the Island" }];
   const STAMPS = [["history", "Periods"], ["wine", "Wine areas"], ["nature", "Landscapes"], ["villages", "Village life"], ["table", "Local foods"]];

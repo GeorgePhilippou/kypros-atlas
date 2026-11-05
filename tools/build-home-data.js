@@ -35,7 +35,7 @@ for (const [mode, list] of Object.entries(PLACES)) for (const p of list) {
     name: p.name, gr: p.gr, mode, lat: p.lat, lon: p.lon, district: p.district, tag: p.tag,
     kind: mode === "history" ? TYPES[p.type] : mode === "nature" ? KIND_LABEL[p.kind] : mode === "wine" ? "Winery or wine village" : p.kindLabel,
     date: p.date || null, era: p.era ? ERAS[p.era].n : null, must: !!v.must, hours: v.v || 1, tags: v.tags || [],
-    blurb: p.desc, photo, north: NORTH.includes(p.name)
+    blurb: p.desc, photo, north: NORTH.includes(p.name), egg: !!p.egg
   });
 }
 const data = {
