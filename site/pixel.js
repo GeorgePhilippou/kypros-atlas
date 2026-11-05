@@ -47,7 +47,8 @@
       const m = BADGE.exec(src);
       if (!m || img.dataset.pxOrig) return;
       img.dataset.pxOrig = src;
-      img.src = sprites + (MEDAL[m[1]] || "trophy") + ".png";
+      // Not collected yet: the lock medal, not a faded copy of the prize
+      img.src = sprites + (img.closest(".locked") ? "med_lock" : MEDAL[m[1]] || "trophy") + ".png";
     } else if (img.dataset.pxOrig) {
       img.src = img.dataset.pxOrig;
       delete img.dataset.pxOrig;
@@ -57,16 +58,32 @@
     const imgs = scope.matches?.("img") ? [scope] : [...(scope.querySelectorAll?.("img") || [])];
     imgs.forEach(swapOne);
   }
+  /* ---------- Avatars: one of four, from the player's name, so a friend always gets the same one ---------- */
+  const avatarOf = name => { let h = 5381; for (const c of String(name).trim().toLowerCase()) h = (h * 33 + c.codePointAt(0)) >>> 0; return h % 4 + 1; };
+  function avatars(scope) {
+    // The map's Friends dialog (.g-board) and the Friends page (.rows)
+    (scope.querySelectorAll?.(".g-board li, .rows li") || []).forEach(li => {
+      const who = li.querySelector(".who b") || li.querySelector(":scope > span");
+      const name = who && (who.firstChild?.nodeValue || who.textContent);
+      if (name) li.dataset.av = avatarOf(name);
+    });
+  }
   new MutationObserver(list => {
-    if (!on) return;
-    list.forEach(r => r.addedNodes.forEach(n => n.nodeType === 1 && swapBadges(n)));
+    list.forEach(r => r.addedNodes.forEach(n => { if (n.nodeType !== 1) return; avatars(n.parentElement || n); if (on) swapBadges(n); }));
   }).observe(html, { childList: true, subtree: true });
 
   /* ---------- The map: fewer, bigger pixels ---------- */
+  // 0.5 draws each map pixel as exactly 2x2 CSS pixels (a whole number), and keeps the map's own labels readable
+  const RATIO = 0.5;
+  let watching = false;
   function mapPixels() {
     try {
       // `map` is the atlas's own variable; it only exists on the map page, once the map has been created
-      if (typeof map !== "undefined" && map && map.setPixelRatio) map.setPixelRatio(on ? 0.4 : (window.devicePixelRatio || 1));
+      if (typeof map === "undefined" || !map || !map.setPixelRatio) return;
+      const want = on ? RATIO : (window.devicePixelRatio || 1);
+      if (map.getPixelRatio() !== want) map.setPixelRatio(want);
+      // Keep it after resizing, turning a phone, moving to another screen and switching 3D terrain
+      if (!watching) { watching = true; map.on("resize", mapPixels); map.on("terrain", mapPixels); }
     } catch (e) {}
   }
 
@@ -96,6 +113,9 @@
     // The map has no top bar: the switch sits in the panel header
     const brand = document.querySelector(".panel .brand");
     if (brand) brand.appendChild(make());
+    // Pages without either, such as credits.html, mark a spot with data-px-slot
+    document.querySelectorAll("[data-px-slot]").forEach(s => s.appendChild(make()));
+    avatars(document);
     paint();
     // The map is created after the page loads, so apply the pixel ratio again once it is ready
     try { if (typeof MAP_READY !== "undefined" && MAP_READY) MAP_READY.then(mapPixels); } catch (e) {}
