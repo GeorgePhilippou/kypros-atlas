@@ -31,7 +31,7 @@
   const burger = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 
   bar.innerHTML = `<div class="wrap k-bar-in">
-      <a class="k-brand" href="${root}home/${q}" aria-label="Kypros, home"${cur("home")}><b>Kypros</b><span>Κύπρος · Kıbrıs</span></a>
+      <a class="k-brand" href="${root}home/${q}" aria-label="KypriGo, home"${cur("home")}><b>Kypri<em>Go</em></b><span>Κύπρος · Kıbrıs</span></a>
       <nav class="k-nav" aria-label="Main">
         <ul class="k-links">
           <li class="k-maps"><button type="button" class="k-maps-btn" aria-expanded="false" aria-controls="k-drop">Maps ${chevron}</button>
