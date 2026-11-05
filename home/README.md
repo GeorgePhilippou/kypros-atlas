@@ -1,4 +1,4 @@
-# Kypros start page
+# KypriGo start page
 
 The page at `/home/`: the shared top bar and one full-width slideshow of places worth visiting today. Each slide links to its map with the place already open, for example `/#nature/larnaca-salt-lake`, so the visitor can check in there.
 

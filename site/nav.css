@@ -4,7 +4,8 @@
 .k-bar { position: sticky; top: 0; z-index: 40; height: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); background: rgb(243 240 234 / .94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); font-family: var(--f-ui); }
 .k-bar-in { display: flex; align-items: center; gap: 24px; height: var(--bar-h); }
 .k-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-height: 44px; }
-.k-brand b { font: 600 23px var(--f-display); }
+.k-brand b { font: 600 23px var(--f-display); white-space: nowrap; }
+.k-brand b em { font-style: normal; color: var(--acc); }
 .k-brand span { font: 13px var(--f-ui); color: var(--muted); white-space: nowrap; }
 .k-nav { margin-left: auto; }
 .k-links { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
