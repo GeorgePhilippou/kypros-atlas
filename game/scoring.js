@@ -63,3 +63,85 @@ const SCORING = {
   "Sotira": {"r": 2, "e": 1, "i": 1, "s": 16, "z": 1500, "q": "Which protected vegetable is named after Sotira?", "a": ["Kolokasi", "Artichoke", "Okra"]},
   "Limnatis": {"r": 3, "e": 2, "i": 1, "s": 14, "z": 800, "q": "Which nut is used in glyko amygdalou?", "a": ["Almonds", "Hazelnuts", "Walnuts"]}
 };
+
+/* =========================================================
+   KYPROS GAME · trophies
+   The rules behind the Trophy Room, shared by the map (game/game.js)
+   and the Passport page (passport/). Nothing here touches the page:
+   give it the saved state and a list of places, get back what is earned.
+   A place is { name, mode, north, egg, stamp }, where stamp is the label
+   it adds to its map's stamp row (a period, wine area, landscape and so on).
+   ========================================================= */
+window.KyprosTrophies = (() => {
+  const STORY = ["Petra tou Romiou", "Sanctuary of Aphrodite", "Amathus", "Kition", "Aphrodite & Adonis Trails"];
+  // c.been(name) and c.countMode(mode) are worked out from the saved visits
+  const TROPHIES = [
+    { id: "aphrodite", name: "Aphrodite Adventures", how: "Finish all five chapters", test: c => STORY.every(c.been) },
+    { id: "huts", name: "First Farmers", how: "Visit Choirokoitia", test: c => c.been("Choirokoitia") },
+    { id: "ingot", name: "The Copper Island", how: "Visit Kition", test: c => c.been("Kition") },
+    { id: "walls", name: "Venetian Nicosia", how: "Visit the Venetian Walls", test: c => c.been("Venetian Walls of Nicosia") },
+    { id: "commandaria", name: "Commandaria", how: "Visit the Commandaria villages", test: c => c.been("Commandaria villages") },
+    { id: "xynisteri", name: "Native Grape", how: "Visit 3 wine places", test: c => c.countMode("wine") >= 3 },
+    { id: "amphora", name: "Five Millennia", how: "Visit 5 wine places", test: c => c.countMode("wine") >= 5 },
+    { id: "leafb", name: "Krasochoria", how: "Visit Omodos", test: c => c.been("Omodos") },
+    { id: "avakas", name: "Avakas Gorge", how: "Walk Avakas Gorge", test: c => c.been("Avakas Gorge") },
+    { id: "cedar", name: "Cedar Valley", how: "Visit Cedar Valley", test: c => c.been("Cedar Valley") }
+  ];
+  const WILD = [
+    { id: "flamingo", name: "Flamingo Season", points: 777, how: "Check in at Larnaca Salt Lake between November and March",
+      test: (p, now) => p.name === "Larnaca Salt Lake" && [10, 11, 0, 1, 2].includes(now.getMonth()) },
+    { id: "firstlight", name: "First Light", points: 1111, how: "Check in at Petra tou Romiou around sunrise",
+      test: (p, now) => p.name === "Petra tou Romiou" && Math.abs(now - sunrise(now, p.lat, p.lon)) <= 45 * 60e3 },
+    { id: "triple", name: "Triple Lens", points: 1234, how: "Check in across any three filters in one day",
+      test: (p, now, state) => new Set(state.log.filter(l => new Date(l.t).toDateString() === now.toDateString()).map(l => l.mode)).size >= 3 }
+  ];
+  const LAURELS = [{ n: 5, name: "Scholar" }, { n: 20, name: "Historian of Kypros" }, { n: 56, name: "Keeper of the Island" }];
+  const STAMPS = [["history", "Periods"], ["wine", "Wine areas"], ["nature", "Landscapes"], ["villages", "Village life"], ["table", "Local foods"]];
+  // Trophies and Wild Cards that have badge art in game/badges/
+  const hasBadge = id => TROPHIES.some(t => t.id === id) || id === "flamingo" || id === "firstlight";
+
+  // Sunrise for a date and place, using the standard almanac formula.
+  function sunrise(d, lat, lon) {
+    const rad = Math.PI / 180, wrap = (v, m) => ((v % m) + m) % m;
+    const start = Date.UTC(d.getUTCFullYear(), 0, 0), day = Math.floor((d - start) / 864e5), lh = lon / 15, t = day + (6 - lh) / 24;
+    const M = .9856 * t - 3.289, L = wrap(M + 1.916 * Math.sin(M * rad) + .02 * Math.sin(2 * M * rad) + 282.634, 360);
+    let RA = wrap(Math.atan(.91764 * Math.tan(L * rad)) / rad, 360);
+    RA = (RA + Math.floor(L / 90) * 90 - Math.floor(RA / 90) * 90) / 15;
+    const sinD = .39782 * Math.sin(L * rad), cosD = Math.cos(Math.asin(sinD));
+    const cosH = (Math.cos(90.833 * rad) - sinD * Math.sin(lat * rad)) / (cosD * Math.cos(lat * rad));
+    const H = (360 - Math.acos(cosH) / rad) / 15, UT = wrap(H + RA - .06571 * t - 6.622 - lh, 24);
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) + UT * 36e5;
+  }
+
+  // Places that count towards the island %: scored, not in the north, and not a hidden easter egg
+  const scorable = p => !!SCORING[p.name] && !p.north && !p.egg;
+  const check = (state, places) => {
+    const been = n => !!state.visits[n];
+    return { been, countMode: m => places.filter(p => p.mode === m && been(p.name)).length };
+  };
+  const earned = (state, places) => { const c = check(state, places); return TROPHIES.filter(t => t.test(c)); };
+  const total = state => Object.values(state.visits).reduce((s, v) => s + (v.points || 0), 0) + Object.values(state.wild).reduce((s, w) => s + (w.points || 0), 0);
+  const laurels = state => Object.values(state.quiz || {}).filter(q => q && q.laurel).length;
+
+  // Everything the Trophy Room shows
+  function room(state, places) {
+    const c = check(state, places), scored = places.filter(scorable), visited = scored.filter(p => c.been(p.name)).length;
+    const nLaurels = laurels(state);
+    const trophies = TROPHIES.map(t => ({ id: t.id, name: t.name, how: t.how, on: t.test(c) }));
+    const wild = WILD.map(w => ({ id: w.id, name: w.name, how: w.how, points: w.points, on: !!state.wild[w.id] }));
+    return {
+      points: total(state), visited, of: scored.length,
+      island: scored.length ? Math.round(visited / scored.length * 1000) / 10 : 0,
+      collected: trophies.filter(t => t.on).length + Object.keys(state.wild).length, possible: TROPHIES.length + WILD.length,
+      story: STORY.map(name => ({ name, on: c.been(name) })),
+      trophies, wild,
+      laurels: { count: nLaurels, of: scored.length, tiers: LAURELS.map(l => ({ ...l, on: nLaurels >= l.n })) },
+      stamps: STAMPS.map(([mode, label]) => {
+        const all = [...new Set(places.filter(p => p.mode === mode && scorable(p)).map(p => p.stamp))];
+        const got = new Set(places.filter(p => p.mode === mode && c.been(p.name)).map(p => p.stamp));
+        return { mode, label, items: all.map(s => ({ name: s, on: got.has(s) })) };
+      })
+    };
+  }
+  return { STORY, TROPHIES, WILD, LAURELS, sunrise, scorable, earned, total, laurels, hasBadge, room };
+})();

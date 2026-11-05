@@ -18,7 +18,8 @@ const { PHOTOS, PLACES, VISIT, MODES, ERAS, TYPES, KIND_LABEL, TRIPS, BASES, INT
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const imgDir = path.join(root, "home", "img");
 fs.mkdirSync(imgDir, { recursive: true });
-for (const f of fs.readdirSync(imgDir)) fs.unlinkSync(path.join(imgDir, f));
+// Only the copied place photos: sub-folders such as img/slides/ hold the slideshow's own photos
+for (const f of fs.readdirSync(imgDir)) if (fs.statSync(path.join(imgDir, f)).isFile()) fs.unlinkSync(path.join(imgDir, f));
 const places = [];
 for (const [mode, list] of Object.entries(PLACES)) for (const p of list) {
   const key = (p.img || []).find(k => PHOTOS[k]);

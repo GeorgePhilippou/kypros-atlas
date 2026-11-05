@@ -1,0 +1,24 @@
+/* Friends and leaderboard */
+.board { display: grid; gap: 18px; max-width: 760px; font-family: var(--f-ui); }
+.group-name { font: 500 26px var(--f-display); }
+.groups { display: flex; flex-wrap: wrap; gap: 6px; }
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rows li { display: grid; grid-template-columns: 32px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 10px; background: var(--card); border: 1px solid var(--rule); }
+.rows li.me { border-color: var(--acc); box-shadow: inset 3px 0 0 var(--acc); }
+.rank { font: 600 18px var(--f-display); color: var(--muted); text-align: center; }
+.who { display: grid; gap: 4px; min-width: 0; }
+.who b { font-size: 16px; }
+.who small { font-size: 13px; color: var(--muted); }
+.barr { display: block; height: 5px; border-radius: 99px; background: var(--track); overflow: hidden; }
+.barr i { display: block; height: 100%; background: var(--acc); border-radius: inherit; }
+.pts { display: grid; justify-items: end; font: 500 22px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.pts small { font: 12px var(--f-ui); color: var(--muted); margin-top: 2px; }
+.form { display: grid; gap: 8px; }
+.form label { font-size: 15px; color: var(--muted); }
+.form-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.form input { flex: 1 1 220px; min-width: 0; min-height: 44px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--rule); background: var(--card); color: var(--ink); font: 16px var(--f-ui); }
+.invite { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+.invite code { padding: 8px 10px; border-radius: 6px; background: var(--track); color: var(--ink); font-size: 13px; word-break: break-all; }
+.out { font-size: 15px; }
+.link { min-height: 44px; padding: 0; border: 0; background: none; color: var(--muted); font: inherit; text-decoration: underline; cursor: pointer; }
+.link:hover { color: var(--acc); }

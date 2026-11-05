@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About · Kypros</title>
+<meta name="description" content="How to use Kypros: pick a map, open a place, check in, earn points and laurels, and compare with friends.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../site/base.css">
+<link rel="stylesheet" href="../site/nav.css">
+<style>
+  .prose { max-width: 42em; }
+  .prose h2 { margin: 48px 0 14px; font-size: clamp(26px, 3vw, 32px); line-height: 1.15; }
+  .prose p + p { margin-top: 12px; }
+  .steps, .tries { margin: 0; padding-left: 1.4em; display: grid; gap: 16px; }
+  .steps li::marker, .tries li::marker { font: 600 17px var(--f-ui); color: var(--acc); }
+  .steps h3, .tries h3 { font: 600 18px/1.3 var(--f-ui); margin-bottom: 2px; }
+  .steps p, .tries p { color: var(--muted); }
+  .credits { font: 16px/1.6 var(--f-ui); color: var(--muted); }
+  .credits a { color: var(--ink); }
+</style>
+</head>
+<body data-page="about">
+<a class="skip" href="#main">Skip to content</a>
+<script src="../home/data.js"></script>
+<header class="k-bar" id="k-bar"></header>
+<script src="../site/nav.js"></script>
+
+<main id="main" class="wrap page">
+  <header class="page-head">
+    <p class="eyebrow">About</p>
+    <h1>How to use Kypros</h1>
+    <p>Kypros is a map of Cyprus you can read five ways: nine thousand years of history, the wine villages of the hills, the island's wild places, its stone and craft villages, and the foods each village is known for.</p>
+  </header>
+
+  <div class="prose">
+    <ol class="steps">
+      <li><h3>Pick a map</h3><p>Open Maps in the top bar and choose Historical, Wine, Nature, Villages or Table. Each one shows the same island through a different story.</p></li>
+      <li><h3>Open a place</h3><p>Tap a pin or a name in the list for its story, photos, how long to allow and the drive to nearby places.</p></li>
+      <li><h3>Check in</h3><p>When you are there, tap Check in. Your phone's location confirms you are on site, then you answer one question about the place.</p></li>
+      <li><h3>Points and laurels</h3><p>A first visit earns points for how rare, hard to reach and important the place is. Going back earns a small bonus, once a month. Some check-ins also turn up Wild Cards. Every place you have been or want to go has a five-question quiz: get all five right to earn its laurel. Laurels are kept apart from leaderboard points.</p></li>
+      <li><h3>Friends</h3><p>On the Friends page, make a group and send the invite link. The board compares points and how much of the island each of you has seen. Your passport and trophy room are on the Passport page.</p></li>
+    </ol>
+
+    <h2>Five things to try first</h2>
+    <ol class="tries">
+      <li><h3>Switch the view</h3><p>Historical, Wine, Nature, Villages and Table sit at the top of the map panel. The map changes its look, its places and its key.</p></li>
+      <li><h3>Open a place</h3><p>Tap a pin or a name in the list for its story, photos, how long to allow and the drive to nearby places.</p></li>
+      <li><h3>Step through time</h3><p>On the historical map, move period by period from the first villages to the Ottoman island.</p></li>
+      <li><h3>Plan a day</h3><p>Choose Plan a day for ready-made trips, or pick your interests and let the map fit the best stops into your time.</p></li>
+      <li><h3>Tilt into 3D</h3><p>The mountain button raises the terrain, so you can see the Troodos and the Kyrenia range rise from the plain.</p></li>
+    </ol>
+
+    <h2>Data and credits</h2>
+    <div class="credits">
+      <p>Roads and places © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, via Overture Maps.</p>
+      <p>Terrain: Copernicus DEM GLO-30 © ESA.</p>
+      <p>Images: Wikimedia Commons, resized, and photos of our own. Authors and licences are listed on the <a href="../credits.html">Image credits</a> page.</p>
+      <p>Map built with <a href="https://maplibre.org/">MapLibre GL JS</a>. <a href="https://github.com/GeorgePhilippou/kypros-atlas">Source on GitHub</a>.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
