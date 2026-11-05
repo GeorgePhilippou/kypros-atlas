@@ -6,6 +6,8 @@
 const Friends = (() => {
   const JOIN_KEY = "kypros.join";
   const cfg = window.KYPROS_SUPABASE;
+  // The site root, worked out from where this file lives (it also runs from a sub-folder on GitHub Pages)
+  const ROOT = new URL("../", document.currentScript ? document.currentScript.src : location.href).href;
   let client = null, user = null, loading = null;
 
   const store = {
@@ -14,11 +16,16 @@ const Friends = (() => {
     del(k) { try { localStorage.removeItem(k); } catch (e) {} }
   };
 
-  // An invite link looks like …/kypros-game/?join=ABCD1234
+  // An invite link looks like …/friends/?join=ABCD1234. Older links opened the map (…/?join=ABCD1234):
+  // those are sent on to the Friends page, keeping ?preview.
   function rememberInvite() {
-    const code = new URLSearchParams(location.search).get("join");
+    const params = new URLSearchParams(location.search), code = params.get("join");
     if (!code) return;
     store.set(JOIN_KEY, code);
+    if (document.body && document.body.dataset.page !== "friends") {
+      location.replace(`${ROOT}friends/?join=${encodeURIComponent(code)}${params.has("preview") ? "&preview" : ""}`);
+      return;
+    }
     const clean = new URL(location.href);
     clean.searchParams.delete("join");
     try { history.replaceState(null, "", clean); } catch (e) {}
@@ -76,6 +83,6 @@ const Friends = (() => {
       store.del(JOIN_KEY);
       return g;
     },
-    inviteLink: code => `${location.origin}${location.pathname}?join=${encodeURIComponent(code)}`
+    inviteLink: code => `${ROOT}friends/?join=${encodeURIComponent(code)}`
   };
 })();
