@@ -18,6 +18,8 @@
   conic-gradient(from 0deg at 50% 50%, currentColor 0 25%, transparent 0 50%, currentColor 0 75%, transparent 0) 0 0 / 7px 7px; opacity: .8; }
 .px-toggle .px-text, .panel .brand .px-toggle .px-text { color: inherit; font: inherit; letter-spacing: inherit; margin: 0; }
 .px-toggle[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+/* Phones: a 44px hit area for the smaller switch in the map panel */
+@media (max-width: 860px) { .px-toggle { position: relative; } .px-toggle::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); } }
 .px-toggle[aria-pressed="true"] .px-chip { opacity: 1; color: var(--acc); }
 .panel .brand .px-toggle { min-height: 32px; padding: 0 10px; font-size: 12.5px; }
 @media (max-width: 699px) {
@@ -200,7 +202,6 @@ html[data-pixel="on"] .slide-name { font-family: var(--f-display) !important; fo
 html[data-pixel="on"] .slide-line { font-family: var(--f-body) !important; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.15; }
 html[data-pixel="on"] .slide-go { border: 0; box-shadow: 0 -3px 0 0 #fff, 0 3px 0 0 #fff, -3px 0 0 0 #fff, 3px 0 0 0 #fff; margin: 3px; }
 html[data-pixel="on"] .show-btn { border: 0; box-shadow: 0 -3px 0 0 #fff, 0 3px 0 0 #fff, -3px 0 0 0 #fff, 3px 0 0 0 #fff; margin: 3px; }
-html[data-pixel="on"] .show-dots .dot { width: 14px; height: 14px; border-radius: 0; }
 html[data-pixel="on"] .slide img { image-rendering: pixelated; }
 
 /* Passport */
@@ -214,6 +215,157 @@ html[data-pixel="on"] .board li, html[data-pixel="on"] .rows > *, html[data-pixe
 html[data-pixel="on"] .rank { font-family: "Press Start 2P", var(--f-display); font-weight: 400; }
 html[data-pixel="on"] .pts { font-family: "Press Start 2P", var(--f-display); font-weight: 400; font-size: 13px; }
 html[data-pixel="on"] .form input { border: 0; box-shadow: 0 0 0 3px var(--ink); font-family: var(--f-ui); font-size: 20px; }
+
+/* =========================================================
+   Coverage: the parts of each screen that still looked classic
+   ========================================================= */
+html[data-pixel="on"] body { --px-box: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); --px-box2: 0 0 0 2px var(--ink); }
+/* One mode icon per map, for places that know their map from the body */
+html[data-pixel="on"] body[data-filter="history"] { --ic-sprite: url("pixel/ic_history.png"); }
+html[data-pixel="on"] body[data-filter="wine"] { --ic-sprite: url("pixel/ic_wine.png"); }
+html[data-pixel="on"] body[data-filter="nature"] { --ic-sprite: url("pixel/ic_nature.png"); }
+html[data-pixel="on"] body[data-filter="villages"] { --ic-sprite: url("pixel/ic_villages.png"); }
+html[data-pixel="on"] body[data-filter="table"] { --ic-sprite: url("pixel/ic_table.png"); }
+
+/* Map key: square swatches, chunky scale bars, larger pixel text */
+html[data-pixel="on"] .key { font-size: 16px; }
+html[data-pixel="on"] .key .sw { box-shadow: var(--px-box2); }
+html[data-pixel="on"] .key .ramp { box-shadow: var(--px-box2); }
+html[data-pixel="on"] .key .ticks { font-size: 15px; }
+html[data-pixel="on"] .key .bar { font-size: 15px; }
+html[data-pixel="on"] .key .bar i { height: 8px; border: 0; box-shadow: var(--px-box2); background: linear-gradient(90deg, var(--ink) 50%, var(--pbg) 50%); }
+html[data-pixel="on"] .key .symkey svg { shape-rendering: crispEdges; }
+/* Period timeline on History */
+html[data-pixel="on"] .tl .seg { gap: 4px; }
+html[data-pixel="on"] .tl .seg button::before { top: 9px; height: 6px; background: var(--rule); transition: none; }
+html[data-pixel="on"] .tl .seg button:hover::before { background: var(--muted); }
+html[data-pixel="on"] .tl .seg button[aria-pressed="true"]::before { top: 6px; height: 12px; background: var(--acc); box-shadow: var(--px-box2); }
+html[data-pixel="on"] .tl .step { border: 0; box-shadow: var(--px-box2); margin: 2px; }
+html[data-pixel="on"] .tl-ends { font-family: var(--f-display); font-size: 8px; letter-spacing: .02em; }
+/* Map attribution button (it was a plain white square) */
+html[data-pixel="on"] .maplibregl-ctrl-attrib.maplibregl-compact { background: var(--pbg); box-shadow: var(--px-box2); margin: 2px; }
+html[data-pixel="on"] .maplibregl-ctrl-attrib-button { border-radius: 0; }
+
+/* Plan a day: planner, chips, button, trip list, summary and route */
+html[data-pixel="on"] .planner { box-shadow: inset 0 0 0 3px var(--rule); }
+html[data-pixel="on"] .plan-l { font-size: 17px; }
+html[data-pixel="on"] .chip, html[data-pixel="on"] body[data-mode] .chip { border: 0; box-shadow: var(--px-box2); margin: 2px; font-family: var(--f-display); font-size: 9px; font-weight: 400; padding: 7px 10px; min-height: 32px; }
+html[data-pixel="on"] .plan-go, html[data-pixel="on"] body[data-mode] .plan-go { box-shadow: var(--px-box); margin: 3px; font-family: var(--f-display); font-size: 10px; font-weight: 400; padding: 12px 16px; transform: none; }
+html[data-pixel="on"] .trip-list { gap: 14px; }
+html[data-pixel="on"] .trip-list button, html[data-pixel="on"] body[data-mode] .trip-list button { border: 0; box-shadow: var(--px-box); margin: 3px; width: calc(100% - 6px); transform: none; }
+html[data-pixel="on"] .tl-name, html[data-pixel="on"] body[data-mode] .tl-name { font-family: var(--f-display); font-size: 12px; font-style: normal; font-weight: 700; text-transform: none; letter-spacing: 0; }
+html[data-pixel="on"] .tl-meta, html[data-pixel="on"] .tl-stops span { font-size: 16px; }
+html[data-pixel="on"] .tl-stops i { box-shadow: var(--px-box2); font-family: var(--f-display); font-size: 8px; font-weight: 400; }
+html[data-pixel="on"] .tl-badge { font-family: var(--f-display); font-size: 8px; font-weight: 400; }
+html[data-pixel="on"] .trip-sum { border: 0; gap: 3px; background: var(--ink); box-shadow: var(--px-box2); margin: 2px; }
+html[data-pixel="on"] .trip-sum b { font-family: var(--f-display); font-size: 15px; font-weight: 700; }
+html[data-pixel="on"] .trip-sum span { font-family: var(--f-display); font-size: 8px; letter-spacing: .04em; }
+html[data-pixel="on"] .itin time { font-family: var(--f-display); font-size: 9px; font-weight: 400; }
+html[data-pixel="on"] .trips-head .eyebrow::before { content: ""; display: inline-block; width: 20px; height: 20px; margin-right: 8px; vertical-align: -6px; background: var(--ic-sprite) center / 20px 20px no-repeat; image-rendering: pixelated; }
+
+/* Place list and card: the mode icon when a place has no photo */
+html[data-pixel="on"] .places .th:not(:has(img)) { background: var(--track) var(--ic-sprite, var(--pin-sprite)) center / 40px 40px no-repeat; }
+html[data-pixel="on"] .card .photo:not(:has(img)) > svg { display: none; }
+html[data-pixel="on"] .card .photo:not(:has(img)) { background: var(--track) var(--ic-sprite) center / 80px 80px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .must-b { font-family: var(--f-display); font-size: 8px; letter-spacing: .04em; }
+
+/* Mode icons in the top bar dropdown, the phone menu and the slide label, in place of the coloured dot */
+html[data-pixel="on"] .k-dot[style*="--history"] { --ic: url("pixel/ic_history.png"); }
+html[data-pixel="on"] .k-dot[style*="--wine"] { --ic: url("pixel/ic_wine.png"); }
+html[data-pixel="on"] .k-dot[style*="--nature"] { --ic: url("pixel/ic_nature.png"); }
+html[data-pixel="on"] .k-dot[style*="--villages"] { --ic: url("pixel/ic_villages.png"); }
+html[data-pixel="on"] .k-dot[style*="--table"] { --ic: url("pixel/ic_table.png"); }
+html[data-pixel="on"] .k-dot[style] { width: 20px; height: 20px; margin: 0; box-shadow: none !important; background: var(--ic) center / 20px 20px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .slide-mode .k-dot[style] { width: 40px; height: 40px; background-size: 40px 40px; }
+
+/* Start page: square dots, whole-pixel sizes */
+html[data-pixel="on"] .dot::before { border-radius: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; transform: none; transition: none; }
+html[data-pixel="on"] .dot[aria-current="true"]::before { width: 14px; height: 14px; margin: -7px 0 0 -7px; transform: none; }
+
+/* Passport: filter icons, stamp and list sprites, visited and must-see stars */
+html[data-pixel="on"] .filters [data-f]::before { content: ""; display: inline-block; width: 20px; height: 20px; margin: -6px 6px -6px 0; vertical-align: middle; background: var(--ic) center / 20px 20px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .filters [data-f="all"]::before { display: none; }
+html[data-pixel="on"] .filters [data-f="history"] { --ic: url("pixel/ic_history.png"); }
+html[data-pixel="on"] .filters [data-f="wine"] { --ic: url("pixel/ic_wine.png"); }
+html[data-pixel="on"] .filters [data-f="nature"] { --ic: url("pixel/ic_nature.png"); }
+html[data-pixel="on"] .filters [data-f="villages"] { --ic: url("pixel/ic_villages.png"); }
+html[data-pixel="on"] .filters [data-f="table"] { --ic: url("pixel/ic_table.png"); }
+html[data-pixel="on"] .page i[style*="--history"] { --pin: url("pixel/pin_history.png"); }
+html[data-pixel="on"] .page i[style*="--wine"] { --pin: url("pixel/pin_wine.png"); }
+html[data-pixel="on"] .page i[style*="--nature"] { --pin: url("pixel/pin_nature.png"); }
+html[data-pixel="on"] .page i[style*="--villages"] { --pin: url("pixel/pin_villages.png"); }
+html[data-pixel="on"] .page i[style*="--table"] { --pin: url("pixel/pin_table.png"); }
+/* Worth seeing next, recent visits and the stamp captions: a pin sprite in place of the coloured square */
+html[data-pixel="on"] #next i[style], html[data-pixel="on"] #recent i[style] { width: 18px !important; height: 24px !important; flex: none; border-radius: 0; box-shadow: none; background: var(--pin) center / 18px 24px no-repeat !important; image-rendering: pixelated; }
+html[data-pixel="on"] .stamp-meta i[style] { width: 9px !important; height: 12px !important; border-radius: 0; background: var(--pin) center / 9px 12px no-repeat !important; image-rendering: pixelated; }
+/* A stamp without a photo shows its map's pin, not a letter */
+html[data-pixel="on"] .stamp:has(.stamp-meta i[style*="--history"]) { --pin: url("pixel/pin_history.png"); }
+html[data-pixel="on"] .stamp:has(.stamp-meta i[style*="--wine"]) { --pin: url("pixel/pin_wine.png"); }
+html[data-pixel="on"] .stamp:has(.stamp-meta i[style*="--nature"]) { --pin: url("pixel/pin_nature.png"); }
+html[data-pixel="on"] .stamp:has(.stamp-meta i[style*="--villages"]) { --pin: url("pixel/pin_villages.png"); }
+html[data-pixel="on"] .stamp:has(.stamp-meta i[style*="--table"]) { --pin: url("pixel/pin_table.png"); }
+html[data-pixel="on"] .stamp-img .ph { width: 36px; height: 48px; font-size: 0; color: transparent; background: var(--pin) center / 36px 48px no-repeat; image-rendering: pixelated; opacity: .55; }
+html[data-pixel="on"] .stamp.seen .stamp-img .ph { opacity: 1; }
+html[data-pixel="on"] .stamp-name { font-family: var(--f-display); font-size: 9px; }
+html[data-pixel="on"] .stamp-meta { font-size: 15px; }
+html[data-pixel="on"] .stamp-must, html[data-pixel="on"] .stamp-mark { font-family: var(--f-display); font-size: 8px; font-weight: 400; border-radius: 0; }
+
+/* Stars: must-see marks and visited marks */
+html[data-pixel="on"] .must-t::before, html[data-pixel="on"] .must-b::before, html[data-pixel="on"] .stamp-must::before, html[data-pixel="on"] .stamp-mark::before {
+  content: ""; display: inline-block; width: 13px; height: 12px; margin-right: 4px; vertical-align: -2px; background: url("pixel/star.png") center / 13px 12px no-repeat; image-rendering: pixelated;
+}
+html[data-pixel="on"] .stamp-mark::before { display: block; margin: 0 auto 3px; width: 26px; height: 24px; background-size: 26px 24px; }
+
+/* Coins and stars in the game HUD, the reveal and the leaderboards */
+html[data-pixel="on"] #g-pts::before { content: ""; display: inline-block; width: 24px; height: 24px; margin-right: 6px; vertical-align: -4px; background: url("pixel/coin.png") center / 24px 24px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] #g-laurels::before { content: ""; display: inline-block; width: 26px; height: 24px; margin-right: 6px; vertical-align: -4px; background: url("pixel/star.png") center / 26px 24px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .g-big::before { content: ""; display: inline-block; width: 48px; height: 48px; margin-right: 12px; vertical-align: -4px; background: url("pixel/coin.png") center / 48px 48px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .g-board b::before, html[data-pixel="on"] .rows .pts::before { content: ""; display: inline-block; width: 24px; height: 24px; margin-right: 6px; vertical-align: -4px; background: url("pixel/coin.png") center / 24px 24px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .rows .pts::before { justify-self: end; margin: 0 0 4px; }
+/* Friend avatars, chosen by pixel.js from the player's name */
+html[data-pixel="on"] .g-board li[data-av] > span:first-child::before, html[data-pixel="on"] .rows li[data-av] .who b::before { content: ""; display: inline-block; width: 28px; height: 32px; margin-right: 8px; vertical-align: -8px; background: var(--av) center / 28px 32px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] li[data-av="1"] { --av: url("pixel/av1.png"); }
+html[data-pixel="on"] li[data-av="2"] { --av: url("pixel/av2.png"); }
+html[data-pixel="on"] li[data-av="3"] { --av: url("pixel/av3.png"); }
+html[data-pixel="on"] li[data-av="4"] { --av: url("pixel/av4.png"); }
+
+/* Trophy room, Wild Cards and Laurels (map dialog and Passport): medals at exactly 3x, the lock for anything not collected */
+html[data-pixel="on"] .g-shelf img, html[data-pixel="on"] .shelf img { width: 84px; height: 84px; }
+html[data-pixel="on"] .g-shelf .locked img, html[data-pixel="on"] .shelf .locked img { filter: none; opacity: 1; }
+html[data-pixel="on"] .g-num, html[data-pixel="on"] .shelf .num {
+  width: 84px; height: 104px; border: 0; box-shadow: none; display: grid; align-content: end; justify-items: center;
+  background: url("pixel/trophy.png") center top / 80px 80px no-repeat; image-rendering: pixelated;
+  font-family: "Press Start 2P", var(--f-display); font-size: 10px; font-weight: 400; color: var(--acc);
+}
+html[data-pixel="on"] .g-shelf .locked .g-num, html[data-pixel="on"] .shelf .locked .num { background-image: url("pixel/med_lock.png"); background-size: 84px 84px; filter: none; opacity: 1; color: var(--muted); }
+html[data-pixel="on"] .g-stamps span, html[data-pixel="on"] .stamp-row span { border-radius: 0; font-size: 15px; }
+
+/* credits.html: its own tokens are --bg, --ink and --acc; the theme reads --paper, --card and --pbg */
+html[data-pixel="on"] body.credits { --paper: var(--bg); --card: var(--bg); --pbg: var(--bg); --track: var(--rule); }
+html[data-pixel="on"] body.credits td, html[data-pixel="on"] body.credits th { font-size: 18px; }
+html[data-pixel="on"] body.credits table { font-size: 18px; }
+.px-slot { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+
+/* Narrow phones: the map header and the two view tabs fit at 320px */
+@media (max-width: 379px) {
+  html[data-pixel="on"] .brand > span:not(.px-text) { display: none; }
+}
+@media (max-width: 860px) {
+  html[data-pixel="on"] .views button { margin: 3px 2px; }
+}
+
+/* Wide screens: the panel scrolls as one, so keep its top compact enough to show the first places above the fold */
+@media (min-width: 861px) {
+  html[data-pixel="on"] .pbar { gap: 12px; padding-top: 18px; }
+  html[data-pixel="on"] .tab { min-height: 58px; }
+  html[data-pixel="on"] .intro { gap: 6px; padding-top: 14px; }
+  html[data-pixel="on"] .intro p { font-size: 18px; line-height: 1.2; }
+  html[data-pixel="on"] .key ul { gap: 1px; }
+  html[data-pixel="on"] .key { font-size: 15px; }
+  html[data-pixel="on"] .panel { top: 20px; bottom: 20px; }
+  html[data-pixel="on"] .key .scale { gap: 6px 10px; }
+  html[data-pixel="on"] .key .bar { font-size: 14px; gap: 8px; }
+}
 
 /* Phones: pins at 2x so the island does not fill up with sprites */
 @media (max-width: 699px) {

@@ -54,6 +54,7 @@ p { margin: 0; }
 .btn-line:hover { border-color: var(--acc); color: var(--acc); }
 .chip { min-height: 36px; border: 1px solid var(--rule); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 14px; font: 500 14px var(--f-ui); cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
 .chip:hover { border-color: var(--acc); }
+@media (max-width: 699px) { .chip { position: relative; } .chip::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); } }
 .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .panel { padding: 20px; border-radius: 12px; background: var(--card); border: 1px solid var(--rule); display: grid; gap: 12px; }
 .panel h3, .label { font: 600 12px var(--f-ui); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
