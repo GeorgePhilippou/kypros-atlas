@@ -1,0 +1,227 @@
+/* =========================================================
+   KYPRIGO · the 8-bit theme (a visual switch, like dark mode)
+   Switched on by site/pixel.js, which sets data-pixel="on" on <html>.
+   Rules:
+   - Colours are never defined here. Every colour is an existing token
+     (--ink, --acc, --pbg, --paper, --card, --rule, --track and the five
+     map colours), so each map keeps its own palette.
+   - Only shape and type change: square corners, stepped borders, pixel
+     fonts, sprite pins and icons, a pixelated map canvas.
+   - Sprites live in site/pixel/ and are drawn on a small grid, then scaled
+     up whole numbers of times with no smoothing.
+   ========================================================= */
+
+/* ---------- The switch (both looks) ---------- */
+.px-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px solid var(--rule); border-radius: 999px; background: none; color: var(--muted); font: 600 14px var(--f-ui, system-ui); cursor: pointer; white-space: nowrap; transition: color .2s, background-color .2s, border-color .2s; }
+.px-toggle:hover { color: var(--ink); border-color: var(--muted); }
+.px-chip { width: 14px; height: 14px; flex: none; background:
+  conic-gradient(from 0deg at 50% 50%, currentColor 0 25%, transparent 0 50%, currentColor 0 75%, transparent 0) 0 0 / 7px 7px; opacity: .8; }
+.px-toggle .px-text, .panel .brand .px-toggle .px-text { color: inherit; font: inherit; letter-spacing: inherit; margin: 0; }
+.px-toggle[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+.px-toggle[aria-pressed="true"] .px-chip { opacity: 1; color: var(--acc); }
+.panel .brand .px-toggle { min-height: 32px; padding: 0 10px; font-size: 12.5px; }
+@media (max-width: 699px) {
+  .k-bar .px-toggle { margin-left: auto; margin-right: 8px; min-width: 44px; padding: 0 10px; }
+  .k-bar .px-toggle + .k-menu-btn { margin-left: 0; }
+  .k-bar .px-toggle .px-text { display: none; }
+}
+@media (min-width: 700px) { .k-bar .px-toggle { margin-left: 12px; } }
+
+/* =========================================================
+   Everything below applies only when 8-bit is on
+   ========================================================= */
+html[data-pixel="on"] { --edge: var(--ink); }
+
+/* ---------- Type, shape and tokens (the map themes set these on body, so match them) ---------- */
+html[data-pixel="on"] body,
+html[data-pixel="on"] body[data-mode] {
+  --f-display: "Silkscreen", "Press Start 2P", ui-monospace, monospace;
+  --f-body: "VT323", ui-monospace, monospace;
+  --f-ui: "VT323", ui-monospace, monospace;
+  --radius: 0px;
+  --body-size: 20px;
+  --photo: saturate(.9) contrast(1.06);
+  --shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), 0 9px 0 0 rgb(42 39 35 / .22);
+  font-size-adjust: 0.5;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  letter-spacing: 0;
+}
+html[data-pixel="on"] body { font-family: var(--f-body); font-size: 20px; line-height: 1.25; }
+html[data-pixel="on"] .must-t { white-space: nowrap; font-family: var(--f-display); font-size: 9px; font-style: normal; }
+html[data-pixel="on"] * { border-radius: 0 !important; }
+html[data-pixel="on"] img, html[data-pixel="on"] .photo img { image-rendering: auto; }
+html[data-pixel="on"] .k-brand b, html[data-pixel="on"] .brand b, html[data-pixel="on"] h1, html[data-pixel="on"] h2, html[data-pixel="on"] h3 { font-family: var(--f-display) !important; font-weight: 700 !important; font-style: normal !important; letter-spacing: .02em !important; text-transform: none; }
+html[data-pixel="on"] .eyebrow, html[data-pixel="on"] .listhead, html[data-pixel="on"] .card .tag, html[data-pixel="on"] .g-eye { font-family: var(--f-display) !important; letter-spacing: .06em !important; font-weight: 400 !important; }
+
+/* A reusable stepped button look */
+html[data-pixel="on"] .px-toggle,
+html[data-pixel="on"] .controls button,
+html[data-pixel="on"] .g-bar button,
+html[data-pixel="on"] .g-main,
+html[data-pixel="on"] .g-opts button,
+html[data-pixel="on"] .views button,
+html[data-pixel="on"] .k-menu-btn {
+  border: 0 !important; margin: 3px;
+  box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -4px 0 0 rgb(0 0 0 / .16), inset 0 3px 0 0 rgb(255 255 255 / .35) !important;
+}
+html[data-pixel="on"] .px-toggle { background: var(--card, var(--pbg)); color: var(--ink); font-family: var(--f-display); font-size: 11px; font-weight: 400; }
+html[data-pixel="on"] .px-toggle[aria-pressed="true"] { background: var(--acc); color: var(--card, var(--pbg)); }
+html[data-pixel="on"] .px-toggle[aria-pressed="true"] .px-chip { color: var(--card, var(--pbg)); }
+html[data-pixel="on"] .px-chip { opacity: 1; }
+html[data-pixel="on"] button:active:not(:disabled), html[data-pixel="on"] .k-link:active { transform: translateY(2px); }
+html[data-pixel="on"] :focus-visible { outline: 3px dashed var(--acc); outline-offset: 3px; }
+
+/* =========================================================
+   The map
+   ========================================================= */
+html[data-pixel="on"] .maplibregl-canvas { image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; }
+html[data-pixel="on"] .maplibregl-ctrl-attrib { font-family: "VT323", monospace; font-size: 15px; }
+
+/* Pins: one sprite per map, drawn at 3x, tip on the place */
+html[data-pixel="on"] .pin .dot,
+html[data-pixel="on"] body[data-mode] .pin .dot {
+  width: 27px; height: 36px; position: relative; top: -17px; border: 0; border-radius: 0 !important; box-shadow: none; filter: none; color: transparent;
+  background: var(--pin-sprite) center bottom / 27px 36px no-repeat; image-rendering: pixelated;
+}
+html[data-pixel="on"] .pin .dot::after { display: none; }
+html[data-pixel="on"] .pin .dot svg { display: none; }
+html[data-pixel="on"] body[data-filter="history"] { --pin-sprite: url("pixel/pin_history.png"); }
+html[data-pixel="on"] body[data-filter="wine"] { --pin-sprite: url("pixel/pin_wine.png"); }
+html[data-pixel="on"] body[data-filter="nature"] { --pin-sprite: url("pixel/pin_nature.png"); }
+html[data-pixel="on"] body[data-filter="villages"] { --pin-sprite: url("pixel/pin_villages.png"); }
+html[data-pixel="on"] body[data-filter="table"] { --pin-sprite: url("pixel/pin_table.png"); }
+html[data-pixel="on"] .pin:hover .dot, html[data-pixel="on"] .pin.hot .dot { transform: translateY(-3px); }
+html[data-pixel="on"] .pin[aria-current="true"] .dot { transform: translateY(-5px); }
+html[data-pixel="on"] .pin[aria-current="true"]::after { display: none; }
+html[data-pixel="on"] body[data-mode="history"] .pin.off .dot { opacity: .4; transform: none; filter: grayscale(1); }
+/* Must-see places and places already visited wear a small star */
+html[data-pixel="on"] .pin.must .dot::after,
+html[data-pixel="on"] .pin.g-done .dot::after { display: block; content: ""; position: absolute; right: -9px; top: -6px; width: 26px; height: 24px; background: url("pixel/star.png") center / 26px 24px no-repeat; image-rendering: pixelated; border: 0; box-shadow: none; }
+html[data-pixel="on"] .pin.must:not(.g-done) .dot::after { width: 13px; height: 12px; background-size: 13px 12px; right: -5px; top: -2px; opacity: .85; }
+html[data-pixel="on"] .pin.g-done .dot { outline: 0; }
+html[data-pixel="on"] .pin .tip { border: 0; box-shadow: var(--shadow); font-size: 17px; padding: 4px 8px; }
+html[data-pixel="on"] body[data-mode="history"] .pin .lbl { font-family: var(--f-display); font-size: 9px; font-weight: 400; letter-spacing: 0; text-shadow: 1px 0 0 var(--paper, #f3f0ea), -1px 0 0 var(--paper, #f3f0ea), 0 1px 0 var(--paper, #f3f0ea), 0 -1px 0 var(--paper, #f3f0ea); }
+
+/* Map controls */
+html[data-pixel="on"] .controls { gap: 10px; }
+html[data-pixel="on"] .controls button { background: var(--pbg); color: var(--ink); }
+
+/* =========================================================
+   Map panel and place card
+   ========================================================= */
+html[data-pixel="on"] .panel, html[data-pixel="on"] .card { border: 0 !important; box-shadow: var(--shadow); }
+html[data-pixel="on"] .panel { top: 24px; bottom: 24px; left: max(24px, env(safe-area-inset-left, 0px)); }
+html[data-pixel="on"] .brand { gap: 10px; align-items: center; }
+html[data-pixel="on"] .brand b { font-size: 13px !important; }
+html[data-pixel="on"] .brand > span:not(.px-text) { font-size: 16px; white-space: nowrap; margin-left: auto; }
+html[data-pixel="on"] .tabs { background: var(--track); padding: 4px; gap: 4px; box-shadow: inset 0 0 0 3px var(--rule); }
+html[data-pixel="on"] .tab-thumb { box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); background: var(--pbg); }
+html[data-pixel="on"] .tab { min-height: 66px; padding-block: 6px !important; font-family: var(--f-display) !important; font-size: 8px !important; letter-spacing: 0 !important; gap: 4px; text-transform: uppercase; }
+html[data-pixel="on"] .tab svg { display: none; }
+html[data-pixel="on"] .tab::before { content: ""; display: block; width: 40px; height: 40px; background: var(--tab-sprite) center / 40px 40px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .tab[data-mode="history"] { --tab-sprite: url("pixel/ic_history.png"); }
+html[data-pixel="on"] .tab[data-mode="wine"] { --tab-sprite: url("pixel/ic_wine.png"); }
+html[data-pixel="on"] .tab[data-mode="nature"] { --tab-sprite: url("pixel/ic_nature.png"); }
+html[data-pixel="on"] .tab[data-mode="villages"] { --tab-sprite: url("pixel/ic_villages.png"); }
+html[data-pixel="on"] .tab[data-mode="table"] { --tab-sprite: url("pixel/ic_table.png"); }
+html[data-pixel="on"] .tab[aria-selected="false"]::before { opacity: .55; }
+html[data-pixel="on"] .views { gap: 8px; }
+html[data-pixel="on"] .views button { background: var(--track); font-family: var(--f-display); font-size: 9px; }
+html[data-pixel="on"] .views button[aria-selected="true"] { background: var(--acc); color: var(--pbg); }
+html[data-pixel="on"] .views button svg { display: none; }
+html[data-pixel="on"] .intro h1 { font-size: 20px; line-height: 1.25; }
+html[data-pixel="on"] .listhead { border-top: 3px solid var(--rule); font-size: 9px; }
+html[data-pixel="on"] .places button { border-radius: 0; }
+html[data-pixel="on"] .places .th { box-shadow: 0 0 0 2px var(--ink); }
+html[data-pixel="on"] .places .th svg { display: none; }
+html[data-pixel="on"] .places .th:not(:has(img)) { background: var(--pin-sprite) center / 18px 24px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .places .nm { font-family: var(--f-display); font-size: 11px; font-weight: 700; }
+html[data-pixel="on"] .places .meta { font-size: 16px; line-height: 1.15; }
+html[data-pixel="on"] .places .no { font-family: var(--f-display); font-size: 10px; }
+html[data-pixel="on"] #places button.g-done .nm::after { content: ""; display: inline-block; width: 13px; height: 12px; margin-left: 6px; background: url("pixel/star.png") center / 13px 12px no-repeat; image-rendering: pixelated; }
+html[data-pixel="on"] .card h2 { font-size: 20px; line-height: 1.25; }
+html[data-pixel="on"] .card .tag { font-size: 9px; }
+html[data-pixel="on"] .card .tag i { border-radius: 0; width: 9px; height: 9px; }
+html[data-pixel="on"] .card .close { box-shadow: 0 0 0 2px var(--ink); }
+html[data-pixel="on"] .card dt { font-family: var(--f-display); font-size: 9px; letter-spacing: .04em; }
+html[data-pixel="on"] .card dd { font-size: 18px; }
+
+/* =========================================================
+   The game inside the map: HUD, check in, reveal, trophies, friends
+   ========================================================= */
+html[data-pixel="on"] .g-bar b { font-family: "Press Start 2P", var(--f-display); font-size: 14px; font-weight: 400; }
+html[data-pixel="on"] .g-bar p { font-size: 17px; }
+html[data-pixel="on"] .g-card { border: 0; box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); margin: 3px; }
+html[data-pixel="on"] .g-card b { font-family: "Press Start 2P", var(--f-display); font-size: 15px; font-weight: 400; }
+html[data-pixel="on"] .g-main { font-family: "Press Start 2P", var(--f-display); font-size: 12px; font-weight: 400; min-height: 52px; text-shadow: 2px 2px 0 rgb(0 0 0 / .35); }
+html[data-pixel="on"] .g-main:disabled { opacity: .6; }
+html[data-pixel="on"] .g-dialog { border: 0; box-shadow: var(--shadow); }
+html[data-pixel="on"] .g-dialog::backdrop { background: rgb(42 39 35 / .6); }
+html[data-pixel="on"] .g-q { font-size: 24px; }
+html[data-pixel="on"] .g-opts button { background: var(--track); text-align: left; font-size: 20px; padding: 10px 12px; }
+html[data-pixel="on"] .g-opts button:hover { background: var(--acc); color: var(--pbg); }
+html[data-pixel="on"] .g-hero, html[data-pixel="on"] .g-shelf img, html[data-pixel="on"] .shelf img, html[data-pixel="on"] .px-medal { image-rendering: pixelated; }
+html[data-pixel="on"] .g-hero { width: 168px; height: 168px; animation: px-bob 1s steps(2) infinite; }
+html[data-pixel="on"] .g-big { font-family: "Press Start 2P", var(--f-display); font-weight: 400; font-size: 54px; text-shadow: 4px 4px 0 var(--ink); }
+html[data-pixel="on"] .g-parts div { box-shadow: 0 0 0 2px var(--ink); padding: 6px 2px; margin: 2px; }
+html[data-pixel="on"] .g-parts b { font-family: var(--f-display); font-size: 14px; }
+html[data-pixel="on"] .g-wild { font-family: var(--f-display); font-size: 11px; }
+html[data-pixel="on"] .g-num { border-radius: 0; box-shadow: 0 0 0 3px var(--acc); border: 0; font-family: "Press Start 2P", var(--f-display); font-size: 14px; }
+html[data-pixel="on"] .g-shelf b, html[data-pixel="on"] .shelf b { font-family: var(--f-display); font-size: 9px; }
+html[data-pixel="on"] .g-shelf span:not(.g-num), html[data-pixel="on"] .shelf span { font-size: 16px; }
+html[data-pixel="on"] .g-banner { border: 0; box-shadow: var(--shadow); }
+html[data-pixel="on"] .g-board li { border-radius: 0; }
+@keyframes px-bob { 50% { transform: translateY(-6px); } }
+
+/* =========================================================
+   Top bar and pages (start page, Passport, Friends, About)
+   ========================================================= */
+html[data-pixel="on"] .k-bar { background: var(--paper); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 4px solid var(--ink); }
+html[data-pixel="on"] .k-brand b { font-size: 18px !important; }
+html[data-pixel="on"] .k-brand span { font-size: 18px; }
+html[data-pixel="on"] .k-link, html[data-pixel="on"] .k-maps-btn { font-family: var(--f-display); font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; border-radius: 0; }
+html[data-pixel="on"] .k-link:hover, html[data-pixel="on"] .k-maps-btn:hover, html[data-pixel="on"] .k-maps-btn[aria-expanded="true"] { background: var(--track); }
+html[data-pixel="on"] .k-link[aria-current="page"] { box-shadow: inset 0 -4px 0 var(--acc); font-weight: 400; }
+html[data-pixel="on"] .k-drop { border: 0; box-shadow: var(--shadow); background: var(--card); top: calc(100% + 10px); }
+html[data-pixel="on"] .k-drop a, html[data-pixel="on"] .k-sheet a { font-family: var(--f-display); font-size: 10px; text-transform: uppercase; font-weight: 400; }
+html[data-pixel="on"] .k-dot { border-radius: 0; width: 12px; height: 12px; box-shadow: 0 0 0 2px var(--ink); margin: 2px; }
+html[data-pixel="on"] .k-sheet { border-bottom: 4px solid var(--ink); box-shadow: none; }
+html[data-pixel="on"] .k-menu-btn { background: var(--card); font-family: var(--f-display); font-size: 10px; font-weight: 400; }
+
+html[data-pixel="on"] .eyebrow { font-size: 10px; }
+html[data-pixel="on"] h1 { font-size: clamp(24px, 4vw, 40px); line-height: 1.2; }
+html[data-pixel="on"] h2 { font-size: clamp(16px, 2.6vw, 24px); line-height: 1.3; }
+html[data-pixel="on"] .page p, html[data-pixel="on"] .page li { font-size: 22px; line-height: 1.25; }
+
+/* Start page slideshow */
+html[data-pixel="on"] .slide-mode, html[data-pixel="on"] .slide-go { font-family: var(--f-display); font-size: 11px; font-weight: 400; letter-spacing: .04em; }
+html[data-pixel="on"] .slide-name { font-family: var(--f-display) !important; font-size: clamp(22px, 4.2vw, 44px) !important; font-weight: 700 !important; line-height: 1.2; text-shadow: 4px 4px 0 rgb(0 0 0 / .55); }
+html[data-pixel="on"] .slide-line { font-family: var(--f-body) !important; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.15; }
+html[data-pixel="on"] .slide-go { border: 0; box-shadow: 0 -3px 0 0 #fff, 0 3px 0 0 #fff, -3px 0 0 0 #fff, 3px 0 0 0 #fff; margin: 3px; }
+html[data-pixel="on"] .show-btn { border: 0; box-shadow: 0 -3px 0 0 #fff, 0 3px 0 0 #fff, -3px 0 0 0 #fff, 3px 0 0 0 #fff; margin: 3px; }
+html[data-pixel="on"] .show-dots .dot { width: 14px; height: 14px; border-radius: 0; }
+html[data-pixel="on"] .slide img { image-rendering: pixelated; }
+
+/* Passport */
+html[data-pixel="on"] .stamp, html[data-pixel="on"] .room-block, html[data-pixel="on"] .stats > *, html[data-pixel="on"] .side > * { border: 0; box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); margin: 3px; }
+html[data-pixel="on"] .filters button { border: 0; box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); margin: 3px 5px; font-family: var(--f-display); font-size: 9px; }
+html[data-pixel="on"] .shelf img { width: 96px; height: 96px; }
+html[data-pixel="on"] .shelf .num, html[data-pixel="on"] .stats b { font-family: "Press Start 2P", var(--f-display); font-weight: 400; }
+
+/* Friends */
+html[data-pixel="on"] .board li, html[data-pixel="on"] .rows > *, html[data-pixel="on"] .groups > * { border: 0; box-shadow: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink); margin: 3px; }
+html[data-pixel="on"] .rank { font-family: "Press Start 2P", var(--f-display); font-weight: 400; }
+html[data-pixel="on"] .pts { font-family: "Press Start 2P", var(--f-display); font-weight: 400; font-size: 13px; }
+html[data-pixel="on"] .form input { border: 0; box-shadow: 0 0 0 3px var(--ink); font-family: var(--f-ui); font-size: 20px; }
+
+/* Phones: pins at 2x so the island does not fill up with sprites */
+@media (max-width: 699px) {
+  html[data-pixel="on"] .pin .dot, html[data-pixel="on"] body[data-mode] .pin .dot { width: 18px; height: 24px; top: -11px; background-size: 18px 24px; }
+  html[data-pixel="on"] .pin.must .dot::after, html[data-pixel="on"] .pin.g-done .dot::after { width: 13px; height: 12px; background-size: 13px 12px; right: -6px; top: -4px; }
+  html[data-pixel="on"] .pin.must:not(.g-done) .dot::after { width: 0; height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-pixel="on"] .g-hero { animation: none; }
+}
